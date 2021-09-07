@@ -1,2 +1,6 @@
 files/to_add.txt
 .c
+.pyd
+old
+trash
+__pycache__

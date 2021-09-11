@@ -190,12 +190,12 @@ def get_tagged_events(tags, pipe=None, check_type="or"):
     return tagged_events
                 
 class Lock_Event(Event):
-    def __init__(self, pipe, **_kwargs):
+    def __init__(self, pipe, max_timer, **_kwargs):
         
-        kwargs = {"keys":None, "timer":0}
+        kwargs = {"keys":None, "tags":set()}
         kwargs.update(**_kwargs)
         
-        Event.__init__(self, pipe, **kwargs)
+        Event.__init__(self, pipe, max_timer, **kwargs)
         self.tags.add("lock")
         self.locked = True
 
@@ -215,12 +215,12 @@ class Lock_Event(Event):
         Event.end(self)
 
 class Unlock_Event(Event):
-    def __init__(self, pipe, locks, **_kwargs):
+    def __init__(self, pipe, locks, max_timer, **_kwargs):
 
-        kwargs = {"timer":0, "tags":set()}
+        kwargs = {"tags":set()}
         kwargs.update(_kwargs)
         
-        Event.__init__(self, pipe, **kwargs)
+        Event.__init__(self, pipe, max_timer, **kwargs)
         self.tags.add("unlock")
         self.locks = locks
 

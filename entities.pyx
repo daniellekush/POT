@@ -503,13 +503,11 @@ class Entity(game_objects.Game_Object):
         self.last_collision = colliding_object
 
 
-class Highlightable(Entity):
+#For entities with outlines
+class Highlightable():
     def __init__(self, highlight_colour, highlighted=False):
         self.highlighted = highlighted
         self.highlight_colour = highlight_colour
-
-    def update(self):
-        pass
         
     def draw_highlight(self):
         if self.surface:
@@ -520,7 +518,6 @@ class Highlightable(Entity):
             transformed_surface = gfx.scale_surface(self.surface.highlighted_surface, (transformed_rect.w, transformed_rect.h))
             
             gfx.draw_rotated_surface(transformed_surface, transformed_rect.topleft, self.angle, cx=0.5, cy=0.5, ox=0.5, oy=0.5)
-        
 
 class Detail(Entity):
     def __init__(self, rect, graphics, **_kwargs):

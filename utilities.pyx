@@ -53,6 +53,47 @@ def get_angle(double x1, double y1, double x2, double y2):
     y = y2-y1
     angle = m.atan2(y,x)
     return angle
+    
+#check if an angle is between two other angles
+def get_angle_bound(angle, b1, b2, degrees=False):
+    if degrees:
+        angle = m.radians(angle)
+        b1 = m.radians(b1)
+        b2 = m.radians(b2)
+        
+    angle %= (2*m.pi)
+    b1 %= (2*m.pi)
+    b2 %= (2*m.pi)
+        
+    #angle bound zone doesn't go through 0
+    if b2 > b1:
+        return b1 <= angle <= b2
+    else:
+        #bound zone 1: b1->0
+        if b1 <= angle <= 2*m.pi:
+            return True
+            
+        #bound zone 2: 0->b2
+        if 0 <= angle <= 2*m.pi:
+            return True
+            
+        return False
+        
+#clamp an angle between two other angles
+#returns the clamped angle
+#if get_bound is True, then it also returns whether the angle was in bounds to begin with
+#def clamp_angle(angle, b1, b2, get_bound=False, degrees=False):
+#    if degrees:
+#        b1 = m.radians(b1)
+#        b2 = m.radians(b2)
+        
+#    if get_angle_bound(angle, b1, b2):
+#        if get_bound:
+#            return angle, True
+#        else:
+#            return angle
+#    else:
+#        if 
 
 #clamp a value between a minimum and maximum value
 def clamp(double value, double min_value, double max_value):

@@ -79,6 +79,52 @@ def get_angle_bound(angle, b1, b2, degrees=False):
             
         return False
         
+#get difference between two angles, measured from a1 to a2
+#TODO: check if left is actually left and if right is actually right
+def get_angle_difference(a1, a2, direction="shortest", degrees=False):
+    if degrees:
+        a1 = m.radians(a1)
+        a2 = m.radians(a2)
+        
+    if direction == "shortest":
+        angle = a1-a2
+        if angle > 1*m.pi:
+            angle = (2*m.pi)-angle
+        
+    elif direction == "left":
+        angle = (a1-a2)%(2*m.pi)
+        
+    elif direction == "right":
+        angle = (a2-a1)%(2*m.pi)
+        
+    else:
+        raise ValueError("direction argument not recognized (please use 'left', 'right' or 'shortest)")
+        
+    if degrees:
+        angle = m.degrees(angle)
+    return angle
+        
+#move an angle a set amount towards a target angle
+#if stop_on_reaching_angle is True, then the angle will stop at the target instead of going past it
+def move_to_target_angle(angle, target_angle, distance, stop_on_reaching_target=True, degrees=False):
+    if degrees:
+        angle = m.radians(angle)
+        target_angle = m.radians(target_angle)
+        
+    #left
+    if get_angle_difference(angle, target_angle, direction="left") >= get_angle_difference(angle, target_angle, direction="right"):
+        angle -= distance
+    else: #right
+        angle += distance
+        
+    angle %= (2*m.pi)
+    
+    if degrees:
+        angle = m.degrees(angle)
+        
+    return angle
+    
+        
 #clamp an angle between two other angles
 #returns the clamped angle
 #if get_bound is True, then it also returns whether the angle was in bounds to begin with

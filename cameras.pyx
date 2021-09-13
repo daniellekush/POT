@@ -193,6 +193,24 @@ class Camera(entities.Entity):
         transformed_p1 = self.transform_point(p1[0], p1[1])
         transformed_p2 = self.transform_point(p2[0], p2[1])
         p.draw.line(g.screen, colour, transformed_p1, transformed_p2, width)
+        
+    #draw an arrow
+    #arrow_angle_difference shows how narrow or wide the arrow is
+    def draw_transformed_arrow(self, colour, p1, p2, arrow_angle_difference, arrow_width, width=1, tip_colour=None):
+        if not tip_colour:
+            tip_colour = colour
+            
+        angle = util.get_angle(p1[0], p1[1], p2[0], p2[1])
+        
+        arrow_angle1 = angle-arrow_angle_difference
+        arrow_point1 = get_line_end(p2[0], p2[1], arrow_angle1, arrow_width)
+        
+        arrow_angle2 = angle+arrow_angle_difference
+        arrow_point2 = get_line_end(p2[0], p2[1], arrow_angle2, arrow_width)
+        
+        self.draw_transformed_line(colour, p1, p2, width=width)
+        self.draw_transformed_line(tip_colour, p2, arrow_point1, width=width)
+        self.draw_transformed_line(tip_colour, p2, arrow_point2, width=width)
 
     def draw_screen_outline(self, colour, border=1):
         transformed_rect = g.camera.transform_rect(self.rect)

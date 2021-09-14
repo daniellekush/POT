@@ -27,31 +27,49 @@ class Particles():
         self.angle = angle
         self.spread = spread
         self.speed = speed
-        self.amount = amount
+        self.max_amount = amount
+        
         self.size = size
-
-        events.Delete_Event(self, self, self.timer)
-
-        self.particles_x = np.empty(self.amount)
+        self.death_event = None
+        
+        self.reset()
+            
+    def reset(self, reset_timer=True):
+	    self.amount = 0
+	    
+	    self.particles_x = np.empty(self.max_amount)
         self.particles_x.fill(self.rect.centerx)
         
-        self.particles_y = np.empty(self.amount)
+        self.particles_y = np.empty(self.max_amount)
         self.particles_y.fill(self.rect.centery)
 
-        self.particles_vx = np.empty(self.amount)
-        self.particles_vy = np.empty(self.amount)
+        self.particles_vx = np.empty(self.max_amount)
+        self.particles_vy = np.empty(self.max_amount)
 
-        for particle in range(self.amount):
-            spread = (r.random()*(self.spread))-(self.spread/2)
-            angle = self.angle+spread
+        for particle in range(self.max_amount):
+            self.spawn_particle()
+            
+        if reset_timer:
+            #set death timer
+            if self.timer is not None:
+	            if self.death_event:
+		            self.death_event.timer = self.timer
+		        else:
+                    self.death_event = events.Delete_Event(self, self, self.timer)
+            
+    def spawn_particle(self):
+	    spread = (r.random()*(self.spread))-(self.spread/2)
+        angle = self.angle+spread
 
 
-            speed = util.clamp(r.random(), self.min_speed, self.max_speed)
-            vx = self.start_vx+(m.cos(angle)*speed*self.speed)
-            vy = self.start_vy+(m.sin(angle)*speed*self.speed)
+        speed = util.clamp(r.random(), self.min_speed, self.max_speed)
+        vx = self.start_vx+(m.cos(angle)*speed*self.speed)
+        vy = self.start_vy+(m.sin(angle)*speed*self.speed)
 
-            self.particles_vx[particle] = vx
-            self.particles_vy[particle] = vy
+        self.particles_vx[self.amount] = vx
+        self.particles_vy[self.amount] = vy
+        
+        self.amount += 1
 
     def delete(self):
         g.particle_spawners.remove(self)
@@ -81,23 +99,27 @@ class Particles():
 
         #ugly but what else can you do?
         if self.style == "circle":
-            for i in range(self.amount):
+            for i in range(self.max_amount):
                 if not np.isnan(self.particles_x[i]):
                     x, y = g.camera.transform_point(self.particles_x[i], self.particles_y[i])
                     if not self.high_quality and ((x < 0 or x > g.WIDTH) or (y < 0 or y > g.HEIGHT)):
+	                    #delete particle
                         self.particles_x[i] = np.NaN
                         self.particles_y[i] = np.NaN
+                        self.amount -= 1
                         
                     else:
                         p.draw.circle(g.screen, self.colour, (int(x), int(y)), size)
         else:
             draw_rect = p.Rect(0,0,size,size)
-            for i in range(self.amount):
+            for i in range(self.max_amount):
                 if not np.isnan(self.particles_x[i]):
                     x, y = g.camera.transform_point(self.particles_x[i], self.particles_y[i])
                     if not self.high_quality and ((x < 0 or x > g.WIDTH) or (y < 0 or y > g.HEIGHT)):
+	                    #delete particle
                         self.particles_x[i] = np.NaN
                         self.particles_y[i] = np.NaN
+                        self.amount -= 1
                         
                     else:
                         draw_rect.center = (x,y)

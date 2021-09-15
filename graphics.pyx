@@ -197,7 +197,7 @@ class Sprite():
 
             self.dirty["max_green"] = False
 
-        return self.mr_surface
+        return self.mg_surface
 
     def get_max_blue(self):
         if self.dirty["max_blue"]:
@@ -213,7 +213,7 @@ class Sprite():
 
             self.dirty["max_blue"] = False
 
-        return self.mr_surface
+        return self.mb_surface
             
     def get_highlighted(self):
         if self.dirty["highlight"]:

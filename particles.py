@@ -35,30 +35,30 @@ class Particles():
         self.reset()
             
     def reset(self, reset_timer=True):
-	    self.amount = 0
-	    
-	    self.particles_x = np.empty(self.max_amount)
+        self.amount = 0
+        
+        self.particles_x = np.empty(self.max_amount)
         self.particles_x.fill(self.rect.centerx)
         
         self.particles_y = np.empty(self.max_amount)
         self.particles_y.fill(self.rect.centery)
-
+        
         self.particles_vx = np.empty(self.max_amount)
         self.particles_vy = np.empty(self.max_amount)
-
+        
         for particle in range(self.max_amount):
             self.spawn_particle()
             
         if reset_timer:
             #set death timer
             if self.timer is not None:
-	            if self.death_event:
-		            self.death_event.timer = self.timer
-		        else:
+                if self.death_event:
+                    self.death_event.timer = self.timer
+                else:
                     self.death_event = events.Delete_Event(self, self, self.timer)
             
     def spawn_particle(self):
-	    spread = (r.random()*(self.spread))-(self.spread/2)
+        spread = (r.random()*(self.spread))-(self.spread/2)
         angle = self.angle+spread
 
 
@@ -103,7 +103,7 @@ class Particles():
                 if not np.isnan(self.particles_x[i]):
                     x, y = g.camera.transform_point(self.particles_x[i], self.particles_y[i])
                     if not self.high_quality and ((x < 0 or x > g.WIDTH) or (y < 0 or y > g.HEIGHT)):
-	                    #delete particle
+                        #delete particle
                         self.particles_x[i] = np.NaN
                         self.particles_y[i] = np.NaN
                         self.amount -= 1
@@ -116,7 +116,7 @@ class Particles():
                 if not np.isnan(self.particles_x[i]):
                     x, y = g.camera.transform_point(self.particles_x[i], self.particles_y[i])
                     if not self.high_quality and ((x < 0 or x > g.WIDTH) or (y < 0 or y > g.HEIGHT)):
-	                    #delete particle
+                        #delete particle
                         self.particles_x[i] = np.NaN
                         self.particles_y[i] = np.NaN
                         self.amount -= 1

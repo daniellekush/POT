@@ -180,6 +180,10 @@ class Camera(entities.Entity):
             gfx.draw_rotated_surface(new_surface, rect.topleft, angle, cx=cx, cy=cy, ox=ox, oy=oy)
         else:
             g.screen.blit(new_surface, new_rect)
+            
+    def draw_transformed_graphics(self, graphics, rect, angle=0, cx=0.5, cy=0.5, ox=0, oy=0):
+        surface = gfx.get_surface(graphics)
+        self.draw_transformed_surface(surface, rect, angle=angle, cx=cx, cy=cy, ox=ox, oy=oy):
 
     def draw_transformed_rect(self, colour, rect, border=0):
         rect = self.transform_rect(rect)

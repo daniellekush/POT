@@ -112,7 +112,7 @@ class Level_Segment():
         self.entities = set()
         self.nodes = set()
 
-    def set_game_objects(self):
+    def set_entities(self):
         self.g.game_objects["class_Entity"] = []
         for entity in g.game_objects.get("class_Entity", []):
             if self.rect.colliderect(entity.rect):
@@ -188,7 +188,34 @@ class Level():
                         segments.append(segment)
                     
         return segments
-
+        
+    #filter_class_names are the names to check for in Entity.class_aliases
+    def get_entities_in_segments(self, rect, filter_class_names=None, tags=None):    
+        found_entities = []
+        for segment in self.get_segments(self, rect, tags=tags):
+            for entity in segment.entities:
+            
+                allow_entity = True
+                
+                #filter
+                if filter_class_names:
+                    allow_entity = False
+                    for classname in filter_class_names:
+                        if classname in entity.class_aliases:
+                            allow_entity = True
+                            break
+                            
+                #duplicates
+                if entity in found_entities:
+                    allow_entity = False
+                    
+                if allow_entity:
+                    found_entities.append(entity)
+                    
+        return found_entities
+                            
+                
+    
     def activate(self):
         self.active = True
         if not self in g.active_levels:
@@ -228,7 +255,7 @@ class Level():
         return False
 
     def draw(self):
-        g.camera.draw_transformed_rect(g.RED, self.rect, border=1)
+        pass
 
     def draw_segments(self):
         for segment in self.segment_list:
@@ -936,8 +963,9 @@ class Tile():
 
 
 #Structures are basically objects that are somewhere in the middle between tiles and entities
+#Think of them as tiles with functions
 class Structure():
-    def __init__(self, tile, width, height, graphics, tags=set()):
+    def __init__(self, tile, width, height, graphics, tags=set(), **kwargs):
         self.tile = tile
         self.tile.structure = self
 
@@ -947,6 +975,7 @@ class Structure():
         self.rect = p.Rect(self.tile.x, self.tile.y, width, height)
 
         self.graphics = graphics
+        self.visible = True
 
         self.tags = tags
 
@@ -957,12 +986,15 @@ class Structure():
                 self.level.structure_tag_dict[tag].append(self)
             else:
                 self.level.structure_tag_dict.update({tag:[self]})
+                
+        self.__dict__.update(**kwargs)
 
     def update(self):
         pass
 
     def draw(self):
-        g.camera.draw_transformed_surface(gfx.get_surface(self.graphics), self.rect)
+        if self.visible:
+            g.camera.draw_transformed_surface(gfx.get_surface(self.graphics), self.rect)
 
     def delete(self):
         self.tile.structure = None
@@ -973,7 +1005,7 @@ class Structure():
 
 class Player_Spawn_Point(Structure):
     def __init__(self, tile):
-        Structure.__init__(self, tile, tile.rect.w, tile.rect.h, None, tags=set("player_spawn_point"))
+        Structure.__init__(self, tile, tile.rect.w, tile.rect.h, None, tags=set("player_spawn_point"), visible=False)
 
 def generate_maze_level(width, height, wall_char, floor_char, tunnel_amount, tunnel_width, tunnel_length, tunnel_turn_chance):
     level_lines = []

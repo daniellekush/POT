@@ -375,6 +375,13 @@ def set_music(music, ext=None, fade_timer=0, loops=-1, volume=None):
             p.mixer.music.stop()
             p.mixer.music.load(music)
             p.mixer.music.play(loops=loops)
+            
+def stop_music(fadeout_time=0):
+    g.current_music = None
+    if fadeout_time:
+        g.mixer.music.fadeout(fadeout_time)
+    else:
+        g.mixer.music.stop()
 
 def set_global_volume(volume):
     g.GLOBAL_VOLUME = volume

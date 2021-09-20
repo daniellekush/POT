@@ -332,10 +332,12 @@ class Game_Object():
             #TODO, test whether pygame will accept non-whole numbers in scale instructions
             draw_surface = gfx.scale_surface(self.surface, (self.rect.w, self.rect.h), cache=self.cache_surfaces)
             gfx.draw_rotated_surface(draw_surface, self.rect.topleft, self.angle, cx=0.5, cy=0.5, ox=0.5, oy=0.5)
-
-    def draw_outline(self, colour, border=1):
-        transformed_rect = g.camera.transform_rect(self.rect)
-        p.draw.rect(g.screen, colour, transformed_rect, border)
+        
+    def set_old_properties(self):
+        self.old_x = self.x
+        self.old_y = self.y
+        self.old_width = self.width
+        self.old_height = self.height
 
     def delete(self, reason=None):
         if not self.deleted:

@@ -820,4 +820,4 @@ def quit_game():
 
     p.display.quit()
     sys.exit()
-    quit()
+

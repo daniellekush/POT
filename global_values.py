@@ -141,7 +141,7 @@ keys, mx, my, ml, mm, mr, mp =\
 [], 0, 0, False, False, False, (0,0)
 tmx, tmy = 0, 0
 rmx, rmy = 0, 0
-mouse_locks = {i:0 for i in range(10)}
+mouse_locks = {i:0 for i in range(20)}
 
 #game state
 current_states = {"start"}

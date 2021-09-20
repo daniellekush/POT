@@ -48,6 +48,9 @@ class Sprite():
         if create_extras:
             self.create_extras()
 
+    def get_size(self):
+        return self.surface.get_size()
+
     def convert_simple(self):
         if self.transparent:
             self.surface = self.surface.convert()

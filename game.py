@@ -356,23 +356,26 @@ def reset_lighting():
         g.light_colour_surface.fill((0,0,0,0))
 
 #get an ordered list of all the objects to draw
-def get_objects_to_draw():
+def get_objects_to_draw(include_entities, include_interface_components):
     drawing_objects = []
+    
     #background interface_components
-    drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and interface_component.background], key=order_interface_component ))
+    if include_interface_components:
+        drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and interface_component.background], key=order_interface_component ))
 
-    if "main" in g.current_states:
-        drawing_objects += g.active_levels
-        drawing_objects += list(sorted([entity for entity in g.game_objects.get("class_Entity", []) if entity.visible], key=order_entity ))
-        
-        drawing_objects += g.light_grids
+    if include_entities:
+        if "main" in g.current_states:
+            drawing_objects += g.active_levels
+            drawing_objects += list(sorted([entity for entity in g.game_objects.get("class_Entity", []) if entity.visible], key=order_entity ))
+            
+            drawing_objects += g.light_grids
     
     #foreground interface_components
-    drawing_objects += events.get_tagged_events({"overlay"})
-    drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and not interface_component.background], key=order_interface_component ))
+    if include_interface_components:
+        drawing_objects += events.get_tagged_events({"overlay"})
+        drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and not interface_component.background], key=order_interface_component ))
     
-    
-        
+  
     return drawing_objects
     
 def draw_lighting():
@@ -386,13 +389,16 @@ def draw():
     if "main" in g.current_states and g.ENABLE_LIGHTING:
         reset_lighting()
         
-    drawing_objects = get_objects_to_draw()
-   
+    drawing_objects = get_objects_to_draw(True, False)
     for obj in drawing_objects:
         obj.draw()
         
     if "main" in g.current_states:
         draw_lighting()
+        
+    drawing_objects = get_objects_to_draw(False, True)
+    for obj in drawing_objects:
+        obj.draw()
 
     #for node_map in g.node_maps:
     #    node_map.draw()

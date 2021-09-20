@@ -701,7 +701,7 @@ class Fade_Event(Event):
             self.last_surface = surface
             self.last_surface_alpha = self.last_surface.get_alpha()
 
-class Overlay(Event):
+class Overlay_Event(Event):
     def __init__(self, pipe, timer, colour, **_kwargs):
 
         kwargs = {"min_intensity":0, "max_intensity":255, "intensity_increase":False}
@@ -735,7 +735,7 @@ class Overlay(Event):
     def delete(self):
         Event.delete(self)
 
-class Play_Sound(Event):
+class Play_Sound_Event(Event):
     def __init__(self, pipe, timer, sound, **_kwargs):
 
         kwargs = {"loops":0, "maxtime":0, "fade_ms":0, "delay":True, "stop_on_end":False}

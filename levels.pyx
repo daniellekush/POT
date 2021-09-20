@@ -963,8 +963,9 @@ class Tile():
 
 
 #Structures are basically objects that are somewhere in the middle between tiles and entities
+#Think of them as tiles with functions
 class Structure():
-    def __init__(self, tile, width, height, graphics, tags=set()):
+    def __init__(self, tile, width, height, graphics, tags=set(), **kwargs):
         self.tile = tile
         self.tile.structure = self
 
@@ -974,6 +975,7 @@ class Structure():
         self.rect = p.Rect(self.tile.x, self.tile.y, width, height)
 
         self.graphics = graphics
+        self.visible = True
 
         self.tags = tags
 
@@ -984,12 +986,15 @@ class Structure():
                 self.level.structure_tag_dict[tag].append(self)
             else:
                 self.level.structure_tag_dict.update({tag:[self]})
+                
+        self.__dict__.update(**kwargs)
 
     def update(self):
         pass
 
     def draw(self):
-        g.camera.draw_transformed_surface(gfx.get_surface(self.graphics), self.rect)
+        if self.visible:
+            g.camera.draw_transformed_surface(gfx.get_surface(self.graphics), self.rect)
 
     def delete(self):
         self.tile.structure = None
@@ -1000,7 +1005,7 @@ class Structure():
 
 class Player_Spawn_Point(Structure):
     def __init__(self, tile):
-        Structure.__init__(self, tile, tile.rect.w, tile.rect.h, None, tags=set("player_spawn_point"))
+        Structure.__init__(self, tile, tile.rect.w, tile.rect.h, None, tags=set("player_spawn_point"), visible=False)
 
 def generate_maze_level(width, height, wall_char, floor_char, tunnel_amount, tunnel_width, tunnel_length, tunnel_turn_chance):
     level_lines = []

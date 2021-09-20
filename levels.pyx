@@ -112,7 +112,7 @@ class Level_Segment():
         self.entities = set()
         self.nodes = set()
 
-    def set_game_objects(self):
+    def set_entities(self):
         self.g.game_objects["class_Entity"] = []
         for entity in g.game_objects.get("class_Entity", []):
             if self.rect.colliderect(entity.rect):

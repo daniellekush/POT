@@ -255,7 +255,7 @@ class Level():
         return False
 
     def draw(self):
-        g.camera.draw_transformed_rect(g.RED, self.rect, border=1)
+        pass
 
     def draw_segments(self):
         for segment in self.segment_list:

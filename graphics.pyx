@@ -7,7 +7,6 @@ import global_values as g
 
 import math as m
 import pygame as p
-import pygame.freetype as freetype
 import os
 
 class Sprite():

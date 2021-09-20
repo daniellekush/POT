@@ -42,7 +42,10 @@ class Creature(entities.Entity):
 
         return sightline
 
-    def accelerate_self(self, angle, magnitude):
+    def accelerate_self(self, angle, magnitude=None):
+	    if magnitude is None:
+		    magnitude = self.move_speed
+		    
         self.self_vx += m.cos(angle)*magnitude
         self.self_vy += m.sin(angle)*magnitude
             

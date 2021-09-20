@@ -552,7 +552,7 @@ def draw_text_lines(pos, font, text_lines, colour, background=None, antialias=Fa
         
     x, y = pos
     for line in text_lines:
-        surface = font.render(line, antialias, colour, background=background)
+        surface = font.render(line, antialias, colour, ackground)
         draw_surface.blit(surface, (x, y))
         y += font.get_linesize()
 
@@ -562,7 +562,7 @@ def draw_text_centered(pos, font, text, colour, background=None, antialias=False
     else:
         draw_surface = g.screen
         
-    surface = font.render(text, antialias, colour, background=background)
+    surface = font.render(text, antialias, colour, background)
     width, height = surface.get_size()
     x, y = pos[0]-int(width/2), pos[1]-int(height/2)
                         

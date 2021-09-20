@@ -117,6 +117,9 @@ saving.Saved_Data("test_data", save_on_quit=True)
 
 #particles.Rain(5, 0.05, 8, gy=5, max_particles=2000)
 
+g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
+
+
 
 def game_over():
     g.current_states = {"game_over"}
@@ -262,10 +265,7 @@ def update():
 
     if  "main" in g.current_states:
         for entity in g.game_objects.get("class_Game_Object", []):
-            entity.old_x = entity.x
-            entity.old_y = entity.y
-            entity.old_width = entity.width
-            entity.old_height = entity.height
+            entity.set_old_properties()
 
     handle_input()
 
@@ -347,15 +347,16 @@ def order_entity(obj):
 def order_interface_component(obj):
     order = obj.draw_bias
     return order
+    
+#fill in the lighting surfaces
+def reset_lighting():
+    g.darkness_surface.fill(g.BLACK)
+    g.darkness_surface.set_alpha(255-g.MIN_LIGHT_LEVEL)
+    if g.ENABLE_COLOURED_LIGHTING:
+        g.light_colour_surface.fill((0,0,0,0))
 
-def draw():
-        
-    if "main" in g.current_states and g.ENABLE_LIGHTING:
-        g.darkness_surface.fill(g.BLACK)
-        g.darkness_surface.set_alpha(255-g.MIN_LIGHT_LEVEL)
-        if g.ENABLE_COLOURED_LIGHTING:
-            g.light_colour_surface.fill((0,0,0,0))
-        
+#get an ordered list of all the objects to draw
+def get_objects_to_draw():
     drawing_objects = []
     #background interface_components
     drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and interface_component.background], key=order_interface_component ))
@@ -363,23 +364,35 @@ def draw():
     if "main" in g.current_states:
         drawing_objects += g.active_levels
         drawing_objects += list(sorted([entity for entity in g.game_objects.get("class_Entity", []) if entity.visible], key=order_entity ))
-    for obj in drawing_objects:
-        obj.draw()
-
-    if "main" in g.current_states:
-        for light_grid in g.light_grids:
-            light_grid.draw()
-
-        if g.ENABLE_LIGHTING:
-            if g.ENABLE_COLOURED_LIGHTING:
-                g.screen.blit(g.light_colour_surface, (0,0))
-            g.screen.blit(g.darkness_surface, (0,0))
-             
+        
+        drawing_objects += g.light_grids
+    
     #foreground interface_components
-    drawing_objects = events.get_tagged_events({"overlay"})
+    drawing_objects += events.get_tagged_events({"overlay"})
     drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and not interface_component.background], key=order_interface_component ))
+    
+    
+        
+    return drawing_objects
+    
+def draw_lighting():
+    if g.ENABLE_LIGHTING:
+        if g.ENABLE_COLOURED_LIGHTING:
+            g.screen.blit(g.light_colour_surface, (0,0))
+        g.screen.blit(g.darkness_surface, (0,0))
+
+def draw():
+        
+    if "main" in g.current_states and g.ENABLE_LIGHTING:
+        reset_lighting()
+        
+    drawing_objects = get_objects_to_draw()
+   
     for obj in drawing_objects:
         obj.draw()
+        
+    if "main" in g.current_states:
+        draw_lighting()
 
     #for node_map in g.node_maps:
     #    node_map.draw()
@@ -389,8 +402,6 @@ def draw():
         
     for saved_variable in g.saved_variables:
         saved_variable.update()
-
-g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
 
 
 

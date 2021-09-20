@@ -552,7 +552,7 @@ def draw_text_lines(pos, font, text_lines, colour, background=None, antialias=Fa
         
     x, y = pos
     for line in text_lines:
-        surface = font.render(line, antialias, colour, ackground)
+        surface = font.render(line, antialias, colour, background)
         draw_surface.blit(surface, (x, y))
         y += font.get_linesize()
 

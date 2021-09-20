@@ -17,11 +17,8 @@ def setup_display(flags=0, icon_name=None, caption=None, rare_caption=None, rare
     if caption:
         p.display.set_caption(caption)
 
-    if rare_caption:
-        if rare_caption_chance > 1:
-            rare_caption_chance = 1/rare_caption_chance
-            if r.random() <= rare_caption_chance:
-                p.display.set_caption(rare_caption)
+    if r.random() <= rare_caption_chance:
+        p.display.set_caption(rare_caption)
 
     if icon_name:
         icon_surface = p.image.load(g.gfx_dir+icon_name)

@@ -338,8 +338,10 @@ class Animation():
 
 #Animation_System class for holding multiple g.animations
 class Animation_System():
-    def __init__(self, spritesheet, anim_id_dict, current_animation_name, anim_timer, loop=True, global_frame=False):
+    def __init__(self, spritesheet, anim_id_dict, current_animation_name, anim_timer, loop=True, global_frame=False, active=True):
         self.anim_timer = anim_timer
+        
+        self.active = active
         
         self.spritesheet = spritesheet
         #generate animations for this Animation_System object
@@ -359,7 +361,8 @@ class Animation_System():
 
     #progress current animation
     def update(self):
-        self.animations[self.current_animation_name].update()
+        if self.active:
+            self.animations[self.current_animation_name].update()
 
     #get current frame of current animation
     def get_current_frame(self):

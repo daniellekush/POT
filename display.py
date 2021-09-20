@@ -17,7 +17,7 @@ def setup_display(flags=0, icon_name=None, caption=None, rare_caption=None, rare
     if caption:
         p.display.set_caption(caption)
 
-    if r.random() <= rare_caption_chance:
+    if rare_caption and r.random() <= rare_caption_chance:
         p.display.set_caption(rare_caption)
 
     if icon_name:

@@ -3,6 +3,7 @@ import math as m
 import time as t
 import random as r
 import os
+import sys
 
 #os.environ["PYGAME_FREETYPE"] = "1"
 p.mixer.pre_init(frequency=44100, size=-16, channels=60, buffer=128)
@@ -412,52 +413,64 @@ def draw():
 
 
 RUNNING = True
-while RUNNING:
-    #update
-    if g.time_to_next_tick <= g.time_to_next_frame:
-        update_type = "tick"
-        elapsed_time = g.time_to_next_tick
-        
-        g.time_to_next_frame -= elapsed_time
-        g.time_to_next_tick = g.MIN_TICK_TIME
 
-        old_tick_perf_counter = g.tick_perf_counter
-        g.tick_perf_counter = t.perf_counter()
-        elapsed_tick_time = g.tick_perf_counter-old_tick_perf_counter
-        g.tick_rate = 1/elapsed_tick_time
-        
-    else:
-        update_type = "frame"
-        elapsed_time = g.time_to_next_frame
-        
-        g.time_to_next_tick -= elapsed_time
-        g.time_to_next_frame = g.MIN_FRAME_TIME
-
-        old_frame_perf_counter = g.frame_perf_counter
-        g.frame_perf_counter = t.perf_counter()
-        elapsed_frame_time = g.frame_perf_counter-old_frame_perf_counter
-        g.frame_rate = 1/elapsed_frame_time
-        
-    if update_type == "tick":
-        handle_internal_commands("start")
-        update()
-        handle_internal_commands("end")
-        g.tick_count += 1
-    elif update_type == "frame":
-        if g.DRAW_BACKGROUND:
-            if g.BACKGROUND_SURFACE:
-                screen.blit(g.BACKGROUND_SURFACE)
-            else:
-                g.screen.fill(g.BACKGROUND_COLOUR)
-        draw()
-        p.display.flip()
-        g.frame_count += 1
-
-    #print("interval")
-    if elapsed_time:
-        if update_type == "tick":
-            g.clock.tick(1/elapsed_time)
-        elif update_type == "frame":
-            g.clock.tick(1/elapsed_time)
+try:
+    while RUNNING:
+        #update
+        if g.time_to_next_tick <= g.time_to_next_frame:
+            update_type = "tick"
+            elapsed_time = g.time_to_next_tick
+            
+            g.time_to_next_frame -= elapsed_time
+            g.time_to_next_tick = g.MIN_TICK_TIME
     
+            old_tick_perf_counter = g.tick_perf_counter
+            g.tick_perf_counter = t.perf_counter()
+            elapsed_tick_time = g.tick_perf_counter-old_tick_perf_counter
+            g.tick_rate = 1/elapsed_tick_time
+            
+        else:
+            update_type = "frame"
+            elapsed_time = g.time_to_next_frame
+            
+            g.time_to_next_tick -= elapsed_time
+            g.time_to_next_frame = g.MIN_FRAME_TIME
+    
+            old_frame_perf_counter = g.frame_perf_counter
+            g.frame_perf_counter = t.perf_counter()
+            elapsed_frame_time = g.frame_perf_counter-old_frame_perf_counter
+            g.frame_rate = 1/elapsed_frame_time
+            
+        if update_type == "tick":
+            handle_internal_commands("start")
+            update()
+            handle_internal_commands("end")
+            g.tick_count += 1
+        elif update_type == "frame":
+            if g.DRAW_BACKGROUND:
+                if g.BACKGROUND_SURFACE:
+                    screen.blit(g.BACKGROUND_SURFACE)
+                else:
+                    g.screen.fill(g.BACKGROUND_COLOUR)
+            draw()
+            p.display.flip()
+            g.frame_count += 1
+    
+        #print("interval")
+        if elapsed_time:
+            if update_type == "tick":
+                g.clock.tick(1/elapsed_time)
+            elif update_type == "frame":
+                g.clock.tick(1/elapsed_time)
+except:
+    import ctypes, traceback, platform
+    if platform.system() == "Windows":
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        
+        if exc_type != SystemExit:
+            MessageBox = ctypes.windll.user32.MessageBoxW 
+            MessageBox(None, "Exception thrown\nType: "+str(exc_type)+"\nValue: "+str(exc_value)+"\nTraceback:\n"+str(traceback), 'Error', 0)
+finally:
+    p.display.quit()
+    sys.exit()
     

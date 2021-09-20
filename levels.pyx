@@ -188,7 +188,34 @@ class Level():
                         segments.append(segment)
                     
         return segments
-
+        
+    #filter_class_names are the names to check for in Entity.class_aliases
+    def get_entities_in_segments(self, rect, filter_class_names=None, tags=None):    
+        found_entities = []
+        for segment in self.get_segments(self, rect, tags=tags):
+            for entity in segment.entities:
+            
+                allow_entity = True
+                
+                #filter
+                if filter_class_names:
+                    allow_entity = False
+                    for classname in filter_class_names:
+                        if classname in entity.class_aliases:
+                            allow_entity = True
+                            break
+                            
+                #duplicates
+                if entity in found_entities:
+                    allow_entity = False
+                    
+                if allow_entity:
+                    found_entities.append(entity)
+                    
+        return found_entities
+                            
+                
+    
     def activate(self):
         self.active = True
         if not self in g.active_levels:

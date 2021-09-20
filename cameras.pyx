@@ -203,10 +203,10 @@ class Camera(entities.Entity):
         angle = util.get_angle(p1[0], p1[1], p2[0], p2[1])
         
         arrow_angle1 = angle-arrow_angle_difference
-        arrow_point1 = get_line_end(p2[0], p2[1], arrow_angle1, arrow_width)
+        arrow_point1 = util.get_line_end(p2[0], p2[1], arrow_angle1, arrow_width)
         
         arrow_angle2 = angle+arrow_angle_difference
-        arrow_point2 = get_line_end(p2[0], p2[1], arrow_angle2, arrow_width)
+        arrow_point2 = util.get_line_end(p2[0], p2[1], arrow_angle2, arrow_width)
         
         self.draw_transformed_line(colour, p1, p2, width=width)
         self.draw_transformed_line(tip_colour, p2, arrow_point1, width=width)

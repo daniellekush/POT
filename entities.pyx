@@ -486,8 +486,8 @@ class Entity(game_objects.Game_Object):
         #for segment in self.segments:
         #    segment.draw()
 
-    def draw_outline(self):
-        g.camera.draw_transformed_rect(g.BLUE, self.rect)
+    def draw_outline(self, colour=g.BLUE, border=6):
+        g.camera.draw_transformed_rect(g.BLUE, self.rect, border=border)
 
     def delete(self):
         self.clear_old_segments()
@@ -501,7 +501,6 @@ class Entity(game_objects.Game_Object):
 
     def collide_pushing(self, colliding_object):
         self.last_collision = colliding_object
-
 
 #For entities with outlines
 class Highlightable():
@@ -600,11 +599,7 @@ class Projectile(Entity):
         Entity.collide(self, colliding_object)
         self.delete()
 
-def set_old_properties():
-    entity.old_x = entity.x
-    entity.old_y = entity.y
-    entity.old_width = entity.width
-    entity.old_height = entity.height
+    
 
 def check_path_clear(start_p, end_p, width, height, collision_dict, exceptions=[], centered=True, details=False, step=None):
     rect = p.Rect(0, 0, width, height)

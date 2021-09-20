@@ -264,8 +264,8 @@ def update():
     sound.update_emitter_volumes()
 
     if  "main" in g.current_states:
-        for entity in g.game_objects.get("class_Game_Object", []):
-            entity.set_old_properties()
+        for game_object in g.game_objects.get("class_Game_Object", []):
+            game_object.set_old_properties()
 
     handle_input()
 

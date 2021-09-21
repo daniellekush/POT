@@ -236,10 +236,20 @@ class Cursor(Decoration):
         kwargs = {}
         kwargs.update(_kwargs)
         Decoration.__init__(self, rect, graphics, active_states, **kwargs)
+        
+        self.draw_bias += self.height
+        
+        p.mouse.set_visible(False)
 
     def update(self):
         Decoration.update(self)
         self.rect.center = (g.smx, g.smy)
+        
+    def delete(self):
+	    Decoration.delete(self)
+	    
+	    if not g.game_objects.get("class_Cursor", False):
+	        p.mouse.set_visible(True)
 
 class Button(Interface_Component):
     def __init__(self, name, rect, pressed_graphics, unpressed_graphics, active_states, **_kwargs):

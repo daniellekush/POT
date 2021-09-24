@@ -1,5 +1,5 @@
 # POT
-POT is a work-in-progress game engine for Pygame. This is not a module yet.
+POT is a game engine for Pygame.
 
-Installation
+##Installation
 Instructions coming soon!

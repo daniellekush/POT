@@ -8,15 +8,50 @@ import importlib
 import sys
 
 
-# helper functions
-def nmx(double x, to_int=True):
+def nmx(double x, to_int=False):
+"""
+Takes the x component of the screen coordinate and converts it to a value between 0 and 1.
+
+Used for relative positions.
+
+Parameters
+----------
+x : number
+x component of the screen coordinate.
+to_int : boolean
+If True, converts to integer - default is False.
+
+Returns
+-------
+normalised_x
+An integer which is between 0 and 1.
+Any out-of-bounds screen value will result in a value which is not between 0 and 1.
+"""
     normalised_x = x/g.WIDTH
     if to_int:
         normalised_x = int(normalised_x)
     return normalised_x
 
 
-def nmy(double y, to_int=True):
+def nmy(double y, to_int=False):
+"""
+Takes the y component of the screen coordinate and converts it to a value between 0 and 1.
+
+Used for relative positions.
+
+Parameters
+----------
+y : number
+y component of the screen coordinate.
+to_int : boolean
+If True, converts to integer - default is False.
+
+Returns
+-------
+normalised_y
+An integer which is between 0 and 1.
+Any out-of-bounds screen value will result in a value which is not between 0 and 1.
+"""
     normalised_y = y/g.HEIGHT
     if to_int:
         normalised_y = int(normalised_y)
@@ -24,6 +59,22 @@ def nmy(double y, to_int=True):
 
 
 def dnmx(double x, to_int=True):
+"""
+Takes a value between 0 and 1 and converts it to the x component of the screen coordinate.
+
+Parameters
+----------
+x : number
+Value between 0 and 1.
+to_int : boolean
+If True, converts to integer - default is True.
+
+Returns
+-------
+normalised_x
+An integer.
+Any out-of-bounds screen value will result in a value which is greater than the screen size.
+"""
     normalised_x = x*g.WIDTH
     if to_int:
         normalised_x = int(normalised_x)
@@ -31,35 +82,117 @@ def dnmx(double x, to_int=True):
 
 
 def dnmy(double y, to_int=True):
+"""
+Takes a value between 0 and 1 and converts it to the y component of the screen coordinate.
+
+Parameters
+----------
+y : number
+Value between 0 and 1.
+to_int : boolean
+If True, converts to integer - default is True.
+
+Returns
+-------
+normalised_y
+An integer.
+Any out-of-bounds screen value will result in a value which is greater than the screen size.
+"""
     normalised_y = y*g.HEIGHT
     if to_int:
         normalised_y = int(normalised_y)
     return normalised_y
 
 
-# get the magnitude of a vector
 def get_magnitude(double x, double y):
+"""
+Gets the magnitude of a vector.
+
+Parameters
+----------
+x : number
+x component of vector.
+y : number
+y component of vector.
+
+Returns
+-------
+The magnitude of a vector as a number.
+"""
     return ((x**2) + (y**2))**0.5
 
 
-# get the distance between two points
 def get_distance(double x1, double y1, double x2, double y2):
+"""
+Gets the distance between two points.
+
+Parameters
+----------
+x1 : number
+x component of point 1.
+x2 : number
+x component of point 2.
+y1 : number
+y component of point 1.
+y2 : number
+y component of point 2.
+
+Returns
+-------
+dist
+The distance between two points as a number.
+"""
     x = x2-x1
     y = y2-y1
     dist = ((x**2) + (y**2))**0.5
     return dist
 
 
-# get the angle between two points
 def get_angle(double x1, double y1, double x2, double y2):
+"""
+Gets the angle between two points.
+
+Parameters
+----------
+x1 : number
+x component of point 1.
+x2 : number
+x component of point 2.
+y1 : number
+y component of point 1.
+y2 : number
+y component of point 2.
+
+Returns
+-------
+angle
+The angle between two points.
+"""
     x = x2-x1
     y = y2-y1
     angle = m.atan2(y, x)
     return angle
 
 
-# check if an angle is between two other angles
 def get_angle_bound(angle, b1, b2, degrees=False):
+"""
+Checks if an angle is between two other angles.
+
+Parameters
+----------
+angle : number
+Angle to check for.
+b1 : number
+First angle.
+b2 : number
+Second angle.
+degrees : boolean
+If True, assumes the given angles are in degrees instead of radians - default is False.
+
+Returns
+-------
+True or False.
+"""
     if degrees:
         angle = m.radians(angle)
         b1 = m.radians(b1)
@@ -69,24 +202,43 @@ def get_angle_bound(angle, b1, b2, degrees=False):
     b1 %= (2*m.pi)
     b2 %= (2*m.pi)
 
-    # angle bound zone doesn't go through 0
     if b2 > b1:
         return b1 <= angle <= b2
     else:
-        # bound zone 1: b1->0
         if b1 <= angle <= 2*m.pi:
             return True
 
-        # bound zone 2: 0->b2
         if 0 <= angle <= 2*m.pi:
             return True
 
         return False
 
 
-# get difference between two angles, measured from a1 to a2
 # TODO: check if left is actually left and if right is actually right
 def get_angle_difference(a1, a2, direction="shortest", degrees=False):
+"""
+Get difference between two angles, measured from a1 to a2
+
+Parameters
+----------
+a1 : number
+First angle.
+a2 : number
+Second angle.
+direction : string
+Direction of a2 from a1 - "left", "right" or "shortest".
+degrees : boolean
+If True, assumes the given angles are in degrees instead of radians - default is False.
+
+Raises
+------
+ValueError if direction argument is not "left", "right" or "shortest".
+
+Returns
+-------
+angle
+Difference between the two angles as a number.
+"""
     if degrees:
         a1 = m.radians(a1)
         a2 = m.radians(a2)
@@ -103,16 +255,35 @@ def get_angle_difference(a1, a2, direction="shortest", degrees=False):
         angle = (a2-a1) % (2*m.pi)
 
     else:
-        raise ValueError("direction argument not recognized (please use 'left', 'right' or 'shortest)")
+        raise ValueError("Direction argument not recognized (please use left, right or shortest)")
 
     if degrees:
         angle = m.degrees(angle)
     return angle
 
 
-# move an angle a set amount towards a target angle
-# if stop_on_reaching_angle is True, then the angle will stop at the target instead of going past it
 def move_to_target_angle(angle, target_angle, distance, stop_on_reaching_target=True, degrees=False):
+"""
+Move an angle a set amount towards a target angle.
+
+Parameters
+----------
+angle : number
+Angle to move.
+target_angle : number
+Target angle.
+distance : string
+Distance to move.
+stop_on_reaching_target : boolean
+If True, the angle will stop at the target instead of going past it - default is True.
+degrees : boolean
+If True, assumes the given angles are in degrees instead of radians - default is False.
+
+Returns
+-------
+angle
+Moved angle as a number.
+"""
     if degrees:
         angle = m.radians(angle)
         target_angle = m.radians(target_angle)
@@ -148,8 +319,25 @@ def move_to_target_angle(angle, target_angle, distance, stop_on_reaching_target=
 #    else:
 #        if
 
-# clamp a value between a minimum and maximum value
+
 def clamp(double value, double min_value, double max_value):
+"""
+Clamp a value between a minimum and maximum value.
+
+Parameters
+----------
+value : number
+Value to clamp between minimum and maximum.
+min_value : number
+Minimum value.
+max_value : number
+Maximum value.
+
+Returns
+-------
+value
+Clamped value.
+"""
     if min_value is not None and value < min_value:
         value = min_value
     elif min_value is not None and value > max_value:
@@ -157,8 +345,26 @@ def clamp(double value, double min_value, double max_value):
     return value
 
 
-# interpolate between two values or lists of values, either linearly or smoothly
 def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
+"""
+Interpolate between two values or lists of values, either linearly or smoothly.
+
+Parameters
+----------
+v1_list : number/list
+First value or list of values.
+v2_list : number/list
+Second value or list of values.
+amount_list : number/list
+Amount or list of amount to interpolate by - between 0 and 1.
+smooth : boolean
+If True, interpolate smoothly - default is False.
+
+Returns
+-------
+interpolated_value
+Interpolated value as a number or list of interpolated number values.
+"""
     if type(v1_list) != list:
         v1_list = [v1_list]
         v2_list = [v2_list]
@@ -178,16 +384,65 @@ def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
 
 
 def rotate_list_left(l, n):
+"""
+Rotates values in list to the left.
+
+Parameters
+----------
+l : list
+List to rotate.
+n : integer
+Number of spaces to rotate.
+
+Returns
+-------
+l
+List rotated to the left.
+"""
     return l[n:] + l[:n]
 
 
 def rotate_list_right(l, n):
+"""
+Rotates values in list to the right.
+
+Parameters
+----------
+l : list
+List to rotate.
+n : integer
+Number of spaces to rotate.
+
+Returns
+-------
+l
+List rotated to the right.
+"""
     return l[-n:] + l[:-n]
 
 
-# given a start point and an angle, get the point a certain distance away from the start point, where the angle between the two points
-# is the same as the angle given
 def get_line_end(x, y, angle, distance, degrees=False):
+"""
+Given a start point and an angle, get the point a certain distance away from the start point, where the angle between the two points is the same as the angle given.
+
+Parameters
+----------
+x : number
+x component of a coordinate.
+y : number
+y component of a coordinate.
+angle : number
+Angle to check against.
+distance : number
+Distance away from the start point.
+degrees : boolean
+If True, assumes the given angles are in degrees instead of radians - default is False.
+
+Returns
+-------
+end_x, end_y
+x and y components of the line end.
+"""
     if degrees:
         end_x = x+(m.sin(m.radians(angle)) * distance)
         end_y = y+(m.cos(m.radians(angle)) * distance)
@@ -198,8 +453,26 @@ def get_line_end(x, y, angle, distance, degrees=False):
     return end_x, end_y
 
 
-# rotate a point around another point
 def rotate_point(origin, point, double angle, degrees=False):
+"""
+Rotate a point around another point.
+
+Parameters
+----------
+origin : tuple
+Point to rotate around.
+point : tuple
+Point that is rotating.
+angle : number
+Angle to rotate against.
+degrees : boolean
+If True, assumes the given angles are in degrees instead of radians - default is False.
+
+Returns
+-------
+qx, qy
+x and y components of the point.
+"""
     # completely stolen from Mark Dickinson from stackoverflow
     if degrees:
         angle = m.radians(angle)
@@ -212,69 +485,102 @@ def rotate_point(origin, point, double angle, degrees=False):
     return qx, qy
 
 
-# rotate an angle a specified amount "towards" another angle
-
-# rotate a rectangle around a point
 def rotate_rect(origin, rect, angle, degrees=False):
+"""
+Rotate a rectangle around a point.
+
+Parameters
+----------
+origin : tuple
+Point to rotate around.
+rect : tuple
+Rectangle that is rotating.
+angle : number
+Angle to rotate against.
+degrees : boolean
+If True, assumes the given angles are in degrees instead of radians - default is False.
+
+Returns
+-------
+List of four rotated points.
+"""
     if degrees:
         angle = m.radians(angle)
 
-    # rotate the top left point of rect
     tl = rotate_point(origin, rect.topleft, angle)
-    # rotate the top right point of rect
     tr = rotate_point(origin, rect.topright, angle)
-    # rotate the bottom left point of rect
     bl = rotate_point(origin, rect.bottomleft, angle)
-    # rotate the bottom right point of rect
     br = rotate_point(origin, rect.bottomright, angle)
 
     return [tl, tr, bl, br]
 
 
-# turn a raw string formatted like this
-# """
-# section one:
-# line1
-# line2
-# section one:
-# line 1
-# """
-# into a dictionary where each value is a list
 def split_string_into_sections(raw_string, split_text, lines=True):
+"""
+Turn a raw string format below into a dictionary where each value is a list.
+
+section one:
+line1
+line2
+section two:
+line 1
+
+Parameters
+----------
+raw_string : string
+Raw string to format into dictionary.
+split_text : string
+Text which splits each section.
+lines : boolean
+If True, split text into lines instead of raw strings - default is True.
+
+Returns
+-------
+sections
+Dictionary containing each section as a list.
+"""
     split_finder_pattern = re.compile(split_text+" [a-zA-Z0-9_]+:")
 
     sections_names = [n[len(split_text)+1:-1] for n in re.findall(split_finder_pattern, raw_string)]
     sections_data = re.split(split_finder_pattern, raw_string)[1:]
 
-    # split into lines
     if lines:
         sections_lines = []
         for section_data in sections_data:
             section_lines = [l for l in section_data.split("\n") if l]
             sections_lines.append(section_lines)
         sections = dict(zip(sections_names, sections_lines))
-    # split into raw strings
     else:
         sections = dict(zip(sections_names, sections_data))
 
     return sections
 
 
-# turn a string like this
-# key1=value1
-# key2=value2
-# key3=value3
-# into a dictionary
 def turn_string_into_dict(string_data, convert_keys=False):
-    # setup tile_key dictionary
+"""
+Turn a raw string format below into a dictionary where each line is a key-value pair.
+
+key1=value1
+key2=value2
+key3=value3
+
+Parameters
+----------
+string_data : string
+Raw string to format into dictionary.
+convert_keys : boolean
+If True, convert key strings into other data types - default is False.
+
+Returns
+-------
+dictionary
+Dictionary of generated key-value pairs.
+"""
     dictionary = {}
 
-    # split raw_key_data into lines, with each line containing a tile character and a tile name
     string_data_lines = string_data.split("\n")
 
-    # create tile key
     for item_string in string_data_lines:
-        # ignore empty key_strings
         if item_string and not item_string.isspace():
             key, value = item_string.split("=")
             if convert_keys:
@@ -285,25 +591,31 @@ def turn_string_into_dict(string_data, convert_keys=False):
     return dictionary
 
 
-# convert a string value into another type
-# this can be used for "simple" data types e.g. Floats and Booleans
-# or more complex types such as Entities
-# this function is recursive so arguments needed to create complex types will also be converted to alternate types
 def convert_string_to_alternate_type(value_string):
+"""
+Convert a string value into another data type.
+This function is recursive so arguments needed to create complex types will also be converted to alternate types.
+
+Parameters
+----------
+value_string : string
+Raw string to format into another data type.
+
+Returns
+-------
+value_converted
+Original string as a new data type.
+"""
     # setup scriptable types if they have not already been set up
     # if not scriptable_types:
 
     # parse through value_string
     # whether a "container" (string literal or list) is currently being processed, and if so what character is used
     container = False
-    # amount of nested complex types
     nest = 0
     list_nest = 0
 
-    # the first part of the string, before the opening bracket e.g. Rect
-    # if the string can be converted to a simple type, e.g. an int, the name will be the whole string
     name = ""
-    # if the string can not be converted to a simple type, the args will be a list of strings that are contained within it's brackets
     args = []
     current_arg = ""
 
@@ -320,7 +632,6 @@ def convert_string_to_alternate_type(value_string):
                     continue
             elif char == ")":
                 nest -= 1
-                # prevent closing bracket from being added to name
                 if nest == 0:
                     args.append(current_arg)
                     continue
@@ -340,13 +651,10 @@ def convert_string_to_alternate_type(value_string):
                 if not char.isspace():
                     current_arg += char
 
-    # args are created by calling this functions recursively
     args = [convert_string_to_alternate_type(arg) for arg in args]
     if args == [""]:
         args = []
 
-    # SIMPLE TYPES (int, bool, list etc)
-    # make value_string numerical if possible
     if name.replace('.', '', 1).replace('-', '', 1).isdigit():
         value_converted = float(name)
     # make value_string boolean if possible
@@ -357,7 +665,6 @@ def convert_string_to_alternate_type(value_string):
     elif name == "None":
         value_converted = None
 
-    # MATH/LOGIC OPERATIONS
     elif name == "Add":
         value_converted = args[0]+args[1]
     elif name == "Sub":
@@ -394,7 +701,6 @@ def convert_string_to_alternate_type(value_string):
     elif name == "Sum":
         value_converted = sum(args)
 
-    # COMPLEX TYPES
     # make value_string a list if possible
     elif name.startswith("[") and name.endswith("]"):
         value_converted = [convert_string_to_alternate_type(v) for v in name.split(",")]
@@ -413,8 +719,6 @@ def convert_string_to_alternate_type(value_string):
     elif name == "Dict":
         value_converted = dict(args)
 
-    # DATA OBTAINING
-    # get global value from value_string
     elif name == "Obj_Value":
         value_converted = getattr(args[0], args[1:])
     elif name == "Func_Value":
@@ -425,7 +729,6 @@ def convert_string_to_alternate_type(value_string):
         importlib.import_module(args[0])
         value_converted = sys.modules[args[0]]
 
-    # SHORTCUTS (can be done using other methods but this is just easier to read/write)
     elif name == "Global":
         value_converted = getattr(g, args[0])
     elif name == "Get_Game_Object_Type":
@@ -438,7 +741,6 @@ def convert_string_to_alternate_type(value_string):
         value_converted = g.logs[args[0]]
 
     else:
-        # remove quotes
         if (value_string.startswith('"') and value_string.endswith('"')) or (value_string.startswith("'") and value_string.endswith("'")):
             value_converted = value_string[1:-1]
         else:
@@ -448,6 +750,25 @@ def convert_string_to_alternate_type(value_string):
 
 
 def bound_text(font, rect, text, safe_bounding=False):
+"""
+Split a string of text into lines such that they won't exceed the bounds of a rectangle when rendered.
+
+Parameters
+----------
+font : graphics.Font
+Font of the text.
+rect : pygame.Rect
+Rectangle whose dimensions will be used for bounding.
+text : string
+Text to bound.
+safe_bounding : boolean
+If True, text is guaranteed not to go outside of bounds when rendered, but may not use all available space - default is False.
+
+Returns
+-------
+lines
+List of lines of text.
+"""
     def handle_word(w):
         if word == "\n":
             result_w = ""
@@ -471,7 +792,6 @@ def bound_text(font, rect, text, safe_bounding=False):
     for word in words:
         if y+text_height <= rect.height:
 
-            # pygame doesn't always seem to get bounding sizes right so here's an option to be safe
             if safe_bounding:
                 width = font.size(word+" ")[0]
             else:
@@ -502,15 +822,41 @@ def bound_text(font, rect, text, safe_bounding=False):
 
 
 def encrypt_value(value):
+"""
+Encrypt a given number. Use the decrypt_value function to decrypt the value.
+
+Parameters
+----------
+value : number
+Plaintext.
+
+Returns
+-------
+encrypted_value
+Ciphertext.
+"""
     encrypted_value = ((value+31.4421)*9.88)**2
     return encrypted_value
 
 
 def decrypt_value(value, int_check=False):
+"""
+Decrypt a given ciphertext from encrypt_value.
+
+Parameters
+----------
+value : number
+Ciphertext.
+int_check : boolean
+If True, gives warning if the decrypted value that should be an integer isn't - default is False.
+
+Returns
+-------
+decrypted_value
+Plaintext.
+"""
     decrypted_value = ((value**0.5)/9.88)-31.4421
 
-    # if it is known that the decrypted value should be an int, this will give a warning if it isn't
-    # (but it does take into account that python float stuff could modify the value very slightly)
     if int_check:
         int_dif = abs(decrypted_value-int(decrypted_value))
         if int_dif > 0.00001:
@@ -522,6 +868,23 @@ def decrypt_value(value, int_check=False):
 
 
 def check_collision(rect, collision_mask, collision_dict, exceptions, obj=None):
+"""
+Check whether collision is occuring within a specific rectangle.
+
+Parameters
+----------
+rect : number
+Entity bounding rectangle.
+collision_dict : dictionary
+Dictionary containing the things that you want to check for collision against.
+exceptions : collection
+Any objects that you ignore in collision.
+
+Returns
+-------
+colliding
+The first object that there was a collision against.
+"""
     def get_entities(entity_list):
         chosen_entities = []
         for ent_type, can_collide in collision_dict.items():
@@ -569,7 +932,6 @@ def check_collision(rect, collision_mask, collision_dict, exceptions, obj=None):
 
         if not check_entities:
             check_entities = get_entities(g.game_objects.get("class_Entity", []))
-    # or don't
     else:
         check_entities = get_entities(g.game_objects.get("class_Entity", []))
 
@@ -594,11 +956,28 @@ def check_collision(rect, collision_mask, collision_dict, exceptions, obj=None):
     return colliding
 
 
-# crappy limited way of checking for collision with a line
-# should really only use it for testing whether sightlines should be tested
-# oh and don't use it on Mask_Levels because it is SLOW
-# (and it doesn't work on Entity mask stuff)
 def check_line_collision(p1, p2, collision_dict, exceptions, obj=None):
+"""
+Checking for collision with a line.
+Should only use for testing whether sightlines should be tested.
+Don't use it on Mask_Levels. Doesn't take into account mask collision.
+
+Parameters
+----------
+p1 : tuple
+First point.
+p2 : tuple
+Second point.
+collision_dict : dictionary
+Dictionary containing the things that you want to check for collision against.
+exceptions : collection
+Any objects that you ignore in collision.
+
+Returns
+-------
+colliding
+The first object that there was a collision against.
+"""
     def get_entities(entity_list):
         chosen_entities = []
         for ent_type, can_collide in collision_dict.items():
@@ -670,6 +1049,21 @@ def check_line_collision(p1, p2, collision_dict, exceptions, obj=None):
 
 
 def get_variable_value(variable_name, variable_obj=None):
+"""
+Get the value of a variable, either an object attribute, or a variable from a module.
+
+Parameters
+----------
+variable_name : string
+Name of variable to get.
+variable_obj : object
+Object to get variable from. If no object is given the object will be the global_values module - Default is None.
+
+Returns
+-------
+value
+Return the value of the variable.
+"""
     if variable_obj:
         value = getattr(variable_obj, variable_name)
     else:
@@ -678,6 +1072,18 @@ def get_variable_value(variable_name, variable_obj=None):
 
 
 def set_variable_value(variable_name, value, variable_obj):
+"""
+Set the value of a variable, either an object attribute or variable from a module.
+
+Parameters
+----------
+variable_name : string
+Name of variable to set.
+value : object
+The variable is set to this value.
+variable_obj : object
+Object to get variable from. If no object is given the object will be the global_values module - Default is None.
+"""
     if variable_obj:
         setattr(variable_obj, variable_name, value)
     else:
@@ -685,6 +1091,25 @@ def set_variable_value(variable_name, value, variable_obj):
 
 
 def get_mouse_point_distance(min_distance, max_distance, point=g.SCREEN_RECT.center, normalise=False):
+"""
+Gets the distance of the mouse point.
+
+Parameters
+----------
+min_distance : number
+Minimum distance for the mouse point. Before this point 0 will be returned instead.
+max_distance : number
+Maximum distance for the mouse point.
+point : object
+The point from which to measure the mouse distance from. Default is the center of the screen.
+normalise : boolean
+If True, distance will be normalised (will be set between 0 and 1) - Default is False.
+
+Returns
+-------
+dist
+Return the distance of the mouse point.
+"""
     mx, my = p.mouse.get_pos()
     dist = clamp(get_distance(point[0], point[1], mx, my), min_distance, max_distance)
 
@@ -697,13 +1122,45 @@ def get_mouse_point_distance(min_distance, max_distance, point=g.SCREEN_RECT.cen
 
 
 def get_mouse_point_angle(point=g.SCREEN_RECT.center):
+"""
+Gets the angle of the mouse point.
+
+Parameters
+----------
+point : object
+The point from which to measure the mouse angle from. Default is the center of the screen.
+
+Returns
+-------
+obj
+Return the mouse point angle.
+"""
     mx, my = p.mouse.get_pos()
     angle = get_angle(point[0], point[1], mx, my)
     return angle
 
 
-# for choosing between a series of objects, each with a different spawn weight
 def choose_weighted_object(obj_dict):
+"""
+For choosing between a series of objects, each with a different choice 'weight'.
+
+Parameters
+----------
+obj_dict : dictionary
+Dictionary containing the collection of objects to choose between, and their weights. Each key is an object, and each value is a weight.
+For example:
+{
+obj1 : 1,
+obj2 : 2,
+obj3 : 5
+}
+would result in obj1 having a 12.5% chance of being chosen, ob2 having a 25% chance, and obj3 having a 62.5% chance
+
+Returns
+-------
+obj
+Return the weighted object.
+"""
     summed_values = []
     value_list = list(obj_dict.values())
     for i, value in enumerate(value_list):
@@ -717,6 +1174,19 @@ def choose_weighted_object(obj_dict):
 
 
 def get_opposite_direction(direction):
+"""
+Gets the opposite direction of a given direction. Supported directions are "up", "down", "left" and "right".
+
+Parameters
+----------
+obj_dict : string
+Direction to reverse.
+
+Returns
+-------
+direction
+The opposite direction.
+"""
     directions = ["up", "down", "left", "right"]
     opposite_directions = ["down", "up", "right", "left"]
     original_direction = direction
@@ -728,8 +1198,26 @@ def get_opposite_direction(direction):
     return direction
 
 
-# set rect position so that a specific part of the rect is in a specific point
 def pin_rect(rect, rect_point, point, in_place=False):
+"""
+Set rect position so that a specific part of the rect is in a specific point.
+
+Parameters
+----------
+rect : pygame.Rect
+Rectangle to pin.
+rect_point : tuple
+Part of rectangle to pin. (0, 0) would be the topleft corner, (1,1) the bottom right, (0.5, 0.5) the center, etc.
+point : tuple
+Point to pin rect_point to.
+in_place : boolean
+If True, the rectangle is replaced - Default is False.
+
+Returns
+-------
+new_rect
+Rectangle pinned in a specific point.
+"""
     if in_place:
         new_rect = rect
     else:
@@ -748,6 +1236,16 @@ def pin_rect(rect, rect_point, point, in_place=False):
 
 
 def scale_rect(rect, scale):
+"""
+Scale a rectangle in place by a given multiplier.
+
+Parameters
+----------
+rect : pygame.Rect
+Rectangle to scale.
+scale : number
+Scale multiplier.
+"""
     scaled_width = rect.width*scale
     scaled_height = rect.height*scale
     old_center = rect.center
@@ -759,11 +1257,51 @@ def scale_rect(rect, scale):
 
 
 def get_random_between(v1, v2):
+"""
+Get a random value between two given values.
+
+Parameters
+----------
+v1 : number
+First value.
+v2 : number
+Second value.
+
+Returns
+-------
+val
+Randomly picked value.
+"""
     val = v1+(r.random()*(v2-v1))
     return val
 
 
 def get_pretty_time(ticks, show_minutes=True, show_seconds=True, show_milliseconds=True, separator=":", digits=2, zfill=True):
+"""
+Takes a number of ticks and converts them into a string showing the time they would take up.
+
+Parameters
+----------
+ticks : list
+Numbers of in-game updates.
+show_minutes : boolean
+If True, minutes will be shown on the time - Default is True.
+show_seconds : boolean
+If True, seconds will be shown on the time - Default is True.
+show_milliseconds : boolean
+If True, milliseconds will be shown on the time - Default is True.
+separator : character
+Character which separates the time values.
+digits : number
+Amount of digits shown for each time section.
+zfill : boolean
+If True, the digits will be filled with zeroes - Default is True.
+
+Returns
+-------
+time_string
+Time formatted as a pretty string.
+"""
     seconds = (ticks//g.MAX_TICK_RATE)
     leftover_seconds = int(seconds % 60)
     minutes = int(seconds//60)
@@ -814,6 +1352,9 @@ def get_pretty_time(ticks, show_minutes=True, show_seconds=True, show_millisecon
 
 
 def quit_game():
+"""
+Safely quits the game.
+"""
     for saved_data_file in g.saved_data_dicts.values():
         if saved_data_file.save_on_quit:
             saved_data_file.save()

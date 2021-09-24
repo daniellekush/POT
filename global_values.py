@@ -15,6 +15,39 @@ def set_filtering(enable):
     g.FILTER_SCALING = enable
     if old_enable != g.FILER_SCALING:
         clear_surface_cache()
+        
+def get_default_surface():
+    width, height = 16,16
+    
+    #create error surface
+    default_surface = p.Surface((width, height))
+    #purple and black grid
+    for x in range(width):
+        for y in range(height):
+            if (x%2) + (y%2) == 0:
+                colour = PURPLE
+            else:
+                colour = BLACK
+            default_surface.set_at((x,y), colour)
+            
+    #add edge colour
+    default_surface.set_at((0,0), RED)
+    default_surface.set_at((1,0), RED)
+    default_surface.set_at((0,1), RED)
+    
+    default_surface.set_at((width-1, 0), YELLOW)
+    default_surface.set_at((width-2, 0), YELLOW)
+    default_surface.set_at((width-1, 1), YELLOW)
+    
+    default_surface.set_at((0,height-1), BLUE)
+    default_surface.set_at((1,height-1), BLUE)
+    default_surface.set_at((0,height-2), BLUE)
+    
+    default_surface.set_at((width-1,height-1), GREEN)
+    default_surface.set_at((width-2,height-1), GREEN)
+    default_surface.set_at((width-1,height-2), GREEN)
+    
+    return default_surface
 
 WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
@@ -66,6 +99,7 @@ gfx_dir = main_dir+"gfx"+os.path.sep
 level_dir = main_dir+"level"+os.path.sep
 sound_dir = main_dir+"sound"+os.path.sep
 data_dir = main_dir+"data"+os.path.sep
+internal_assets_dir = __file__+os.path.sep+"assets"+os.path.sep
 
 game_object_next_id = 0
 
@@ -148,7 +182,12 @@ current_states = {"start"}
 
 sound_dict = {}
 
-default_surface = p.image.load(gfx_dir+"error.png")
+
+default_surface = get_default_surface()
+
+        
 fps_text_box = None
 
 current_music = None
+
+

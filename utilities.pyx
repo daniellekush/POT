@@ -1,3 +1,7 @@
+# cython: profile=True
+# cython: language_level=3
+# cython: infer_types=True
+
 import global_values as g
 
 import pygame as p
@@ -9,24 +13,24 @@ import sys
 
 
 def nmx(double x, to_int=False):
-"""
-Takes the x component of the screen coordinate and converts it to a value between 0 and 1.
-
-Used for relative positions.
-
-Parameters
-----------
-x : number
-x component of the screen coordinate.
-to_int : boolean
-If True, converts to integer - default is False.
-
-Returns
--------
-normalised_x
-An integer which is between 0 and 1.
-Any out-of-bounds screen value will result in a value which is not between 0 and 1.
-"""
+    """
+    Takes the x component of the screen coordinate and converts it to a value between 0 and 1.
+    
+    Used for relative positions.
+    
+    Parameters
+    ----------
+    x : number
+    x component of the screen coordinate.
+    to_int : boolean
+    If True, converts to integer - default is False.
+    
+    Returns
+    -------
+    normalised_x
+    An integer which is between 0 and 1.
+    Any out-of-bounds screen value will result in a value which is not between 0 and 1.
+    """
     normalised_x = x/g.WIDTH
     if to_int:
         normalised_x = int(normalised_x)
@@ -34,24 +38,24 @@ Any out-of-bounds screen value will result in a value which is not between 0 and
 
 
 def nmy(double y, to_int=False):
-"""
-Takes the y component of the screen coordinate and converts it to a value between 0 and 1.
-
-Used for relative positions.
-
-Parameters
-----------
-y : number
-y component of the screen coordinate.
-to_int : boolean
-If True, converts to integer - default is False.
-
-Returns
--------
-normalised_y
-An integer which is between 0 and 1.
-Any out-of-bounds screen value will result in a value which is not between 0 and 1.
-"""
+    """
+    Takes the y component of the screen coordinate and converts it to a value between 0 and 1.
+    
+    Used for relative positions.
+    
+    Parameters
+    ----------
+    y : number
+    y component of the screen coordinate.
+    to_int : boolean
+    If True, converts to integer - default is False.
+    
+    Returns
+    -------
+    normalised_y
+    An integer which is between 0 and 1.
+    Any out-of-bounds screen value will result in a value which is not between 0 and 1.
+    """
     normalised_y = y/g.HEIGHT
     if to_int:
         normalised_y = int(normalised_y)
@@ -59,22 +63,22 @@ Any out-of-bounds screen value will result in a value which is not between 0 and
 
 
 def dnmx(double x, to_int=True):
-"""
-Takes a value between 0 and 1 and converts it to the x component of the screen coordinate.
-
-Parameters
-----------
-x : number
-Value between 0 and 1.
-to_int : boolean
-If True, converts to integer - default is True.
-
-Returns
--------
-normalised_x
-An integer.
-Any out-of-bounds screen value will result in a value which is greater than the screen size.
-"""
+    """
+    Takes a value between 0 and 1 and converts it to the x component of the screen coordinate.
+    
+    Parameters
+    ----------
+    x : number
+    Value between 0 and 1.
+    to_int : boolean
+    If True, converts to integer - default is True.
+    
+    Returns
+    -------
+    normalised_x
+    An integer.
+    Any out-of-bounds screen value will result in a value which is greater than the screen size.
+    """
     normalised_x = x*g.WIDTH
     if to_int:
         normalised_x = int(normalised_x)
@@ -82,22 +86,22 @@ Any out-of-bounds screen value will result in a value which is greater than the 
 
 
 def dnmy(double y, to_int=True):
-"""
-Takes a value between 0 and 1 and converts it to the y component of the screen coordinate.
-
-Parameters
-----------
-y : number
-Value between 0 and 1.
-to_int : boolean
-If True, converts to integer - default is True.
-
-Returns
--------
-normalised_y
-An integer.
-Any out-of-bounds screen value will result in a value which is greater than the screen size.
-"""
+    """
+    Takes a value between 0 and 1 and converts it to the y component of the screen coordinate.
+    
+    Parameters
+    ----------
+    y : number
+    Value between 0 and 1.
+    to_int : boolean
+    If True, converts to integer - default is True.
+    
+    Returns
+    -------
+    normalised_y
+    An integer.
+    Any out-of-bounds screen value will result in a value which is greater than the screen size.
+    """
     normalised_y = y*g.HEIGHT
     if to_int:
         normalised_y = int(normalised_y)
@@ -105,43 +109,43 @@ Any out-of-bounds screen value will result in a value which is greater than the 
 
 
 def get_magnitude(double x, double y):
-"""
-Gets the magnitude of a vector.
-
-Parameters
-----------
-x : number
-x component of vector.
-y : number
-y component of vector.
-
-Returns
--------
-The magnitude of a vector as a number.
-"""
+    """
+    Gets the magnitude of a vector.
+    
+    Parameters
+    ----------
+    x : number
+    x component of vector.
+    y : number
+    y component of vector.
+    
+    Returns
+    -------
+    The magnitude of a vector as a number.
+    """
     return ((x**2) + (y**2))**0.5
 
 
 def get_distance(double x1, double y1, double x2, double y2):
-"""
-Gets the distance between two points.
-
-Parameters
-----------
-x1 : number
-x component of point 1.
-x2 : number
-x component of point 2.
-y1 : number
-y component of point 1.
-y2 : number
-y component of point 2.
-
-Returns
--------
-dist
-The distance between two points as a number.
-"""
+    """
+    Gets the distance between two points.
+    
+    Parameters
+    ----------
+    x1 : number
+    x component of point 1.
+    x2 : number
+    x component of point 2.
+    y1 : number
+    y component of point 1.
+    y2 : number
+    y component of point 2.
+    
+    Returns
+    -------
+    dist
+    The distance between two points as a number.
+    """
     x = x2-x1
     y = y2-y1
     dist = ((x**2) + (y**2))**0.5
@@ -149,25 +153,25 @@ The distance between two points as a number.
 
 
 def get_angle(double x1, double y1, double x2, double y2):
-"""
-Gets the angle between two points.
-
-Parameters
-----------
-x1 : number
-x component of point 1.
-x2 : number
-x component of point 2.
-y1 : number
-y component of point 1.
-y2 : number
-y component of point 2.
-
-Returns
--------
-angle
-The angle between two points.
-"""
+    """
+    Gets the angle between two points.
+    
+    Parameters
+    ----------
+    x1 : number
+    x component of point 1.
+    x2 : number
+    x component of point 2.
+    y1 : number
+    y component of point 1.
+    y2 : number
+    y component of point 2.
+    
+    Returns
+    -------
+    angle
+    The angle between two points.
+    """
     x = x2-x1
     y = y2-y1
     angle = m.atan2(y, x)
@@ -175,24 +179,24 @@ The angle between two points.
 
 
 def get_angle_bound(angle, b1, b2, degrees=False):
-"""
-Checks if an angle is between two other angles.
-
-Parameters
-----------
-angle : number
-Angle to check for.
-b1 : number
-First angle.
-b2 : number
-Second angle.
-degrees : boolean
-If True, assumes the given angles are in degrees instead of radians - default is False.
-
-Returns
--------
-True or False.
-"""
+    """
+    Checks if an angle is between two other angles.
+    
+    Parameters
+    ----------
+    angle : number
+    Angle to check for.
+    b1 : number
+    First angle.
+    b2 : number
+    Second angle.
+    degrees : boolean
+    If True, assumes the given angles are in degrees instead of radians - default is False.
+    
+    Returns
+    -------
+    True or False.
+    """
     if degrees:
         angle = m.radians(angle)
         b1 = m.radians(b1)
@@ -216,29 +220,29 @@ True or False.
 
 # TODO: check if left is actually left and if right is actually right
 def get_angle_difference(a1, a2, direction="shortest", degrees=False):
-"""
-Get difference between two angles, measured from a1 to a2
-
-Parameters
-----------
-a1 : number
-First angle.
-a2 : number
-Second angle.
-direction : string
-Direction of a2 from a1 - "left", "right" or "shortest".
-degrees : boolean
-If True, assumes the given angles are in degrees instead of radians - default is False.
-
-Raises
-------
-ValueError if direction argument is not "left", "right" or "shortest".
-
-Returns
--------
-angle
-Difference between the two angles as a number.
-"""
+    """
+    Get difference between two angles, measured from a1 to a2
+    
+    Parameters
+    ----------
+    a1 : number
+    First angle.
+    a2 : number
+    Second angle.
+    direction : string
+    Direction of a2 from a1 - "left", "right" or "shortest".
+    degrees : boolean
+    If True, assumes the given angles are in degrees instead of radians - default is False.
+    
+    Raises
+    ------
+    ValueError if direction argument is not "left", "right" or "shortest".
+    
+    Returns
+    -------
+    angle
+    Difference between the two angles as a number.
+    """
     if degrees:
         a1 = m.radians(a1)
         a2 = m.radians(a2)
@@ -263,27 +267,27 @@ Difference between the two angles as a number.
 
 
 def move_to_target_angle(angle, target_angle, distance, stop_on_reaching_target=True, degrees=False):
-"""
-Move an angle a set amount towards a target angle.
-
-Parameters
-----------
-angle : number
-Angle to move.
-target_angle : number
-Target angle.
-distance : string
-Distance to move.
-stop_on_reaching_target : boolean
-If True, the angle will stop at the target instead of going past it - default is True.
-degrees : boolean
-If True, assumes the given angles are in degrees instead of radians - default is False.
-
-Returns
--------
-angle
-Moved angle as a number.
-"""
+    """
+    Move an angle a set amount towards a target angle.
+    
+    Parameters
+    ----------
+    angle : number
+    Angle to move.
+    target_angle : number
+    Target angle.
+    distance : string
+    Distance to move.
+    stop_on_reaching_target : boolean
+    If True, the angle will stop at the target instead of going past it - default is True.
+    degrees : boolean
+    If True, assumes the given angles are in degrees instead of radians - default is False.
+    
+    Returns
+    -------
+    angle
+    Moved angle as a number.
+    """
     if degrees:
         angle = m.radians(angle)
         target_angle = m.radians(target_angle)
@@ -321,23 +325,23 @@ Moved angle as a number.
 
 
 def clamp(double value, double min_value, double max_value):
-"""
-Clamp a value between a minimum and maximum value.
-
-Parameters
-----------
-value : number
-Value to clamp between minimum and maximum.
-min_value : number
-Minimum value.
-max_value : number
-Maximum value.
-
-Returns
--------
-value
-Clamped value.
-"""
+    """
+    Clamp a value between a minimum and maximum value.
+    
+    Parameters
+    ----------
+    value : number
+    Value to clamp between minimum and maximum.
+    min_value : number
+    Minimum value.
+    max_value : number
+    Maximum value.
+    
+    Returns
+    -------
+    value
+    Clamped value.
+    """
     if min_value is not None and value < min_value:
         value = min_value
     elif min_value is not None and value > max_value:
@@ -346,25 +350,25 @@ Clamped value.
 
 
 def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
-"""
-Interpolate between two values or lists of values, either linearly or smoothly.
-
-Parameters
-----------
-v1_list : number/list
-First value or list of values.
-v2_list : number/list
-Second value or list of values.
-amount_list : number/list
-Amount or list of amount to interpolate by - between 0 and 1.
-smooth : boolean
-If True, interpolate smoothly - default is False.
-
-Returns
--------
-interpolated_value
-Interpolated value as a number or list of interpolated number values.
-"""
+    """
+    Interpolate between two values or lists of values, either linearly or smoothly.
+    
+    Parameters
+    ----------
+    v1_list : number/list
+    First value or list of values.
+    v2_list : number/list
+    Second value or list of values.
+    amount_list : number/list
+    Amount or list of amount to interpolate by - between 0 and 1.
+    smooth : boolean
+    If True, interpolate smoothly - default is False.
+    
+    Returns
+    -------
+    interpolated_value
+    Interpolated value as a number or list of interpolated number values.
+    """
     if type(v1_list) != list:
         v1_list = [v1_list]
         v2_list = [v2_list]
@@ -384,65 +388,65 @@ Interpolated value as a number or list of interpolated number values.
 
 
 def rotate_list_left(l, n):
-"""
-Rotates values in list to the left.
-
-Parameters
-----------
-l : list
-List to rotate.
-n : integer
-Number of spaces to rotate.
-
-Returns
--------
-l
-List rotated to the left.
-"""
+    """
+    Rotates values in list to the left.
+    
+    Parameters
+    ----------
+    l : list
+    List to rotate.
+    n : integer
+    Number of spaces to rotate.
+    
+    Returns
+    -------
+    l
+    List rotated to the left.
+    """
     return l[n:] + l[:n]
 
 
 def rotate_list_right(l, n):
-"""
-Rotates values in list to the right.
-
-Parameters
-----------
-l : list
-List to rotate.
-n : integer
-Number of spaces to rotate.
-
-Returns
--------
-l
-List rotated to the right.
-"""
+    """
+    Rotates values in list to the right.
+    
+    Parameters
+    ----------
+    l : list
+    List to rotate.
+    n : integer
+    Number of spaces to rotate.
+    
+    Returns
+    -------
+    l
+    List rotated to the right.
+    """
     return l[-n:] + l[:-n]
 
 
 def get_line_end(x, y, angle, distance, degrees=False):
-"""
-Given a start point and an angle, get the point a certain distance away from the start point, where the angle between the two points is the same as the angle given.
-
-Parameters
-----------
-x : number
-x component of a coordinate.
-y : number
-y component of a coordinate.
-angle : number
-Angle to check against.
-distance : number
-Distance away from the start point.
-degrees : boolean
-If True, assumes the given angles are in degrees instead of radians - default is False.
-
-Returns
--------
-end_x, end_y
-x and y components of the line end.
-"""
+    """
+    Given a start point and an angle, get the point a certain distance away from the start point, where the angle between the two points is the same as the angle given.
+    
+    Parameters
+    ----------
+    x : number
+    x component of a coordinate.
+    y : number
+    y component of a coordinate.
+    angle : number
+    Angle to check against.
+    distance : number
+    Distance away from the start point.
+    degrees : boolean
+    If True, assumes the given angles are in degrees instead of radians - default is False.
+    
+    Returns
+    -------
+    end_x, end_y
+    x and y components of the line end.
+    """
     if degrees:
         end_x = x+(m.sin(m.radians(angle)) * distance)
         end_y = y+(m.cos(m.radians(angle)) * distance)
@@ -454,25 +458,25 @@ x and y components of the line end.
 
 
 def rotate_point(origin, point, double angle, degrees=False):
-"""
-Rotate a point around another point.
-
-Parameters
-----------
-origin : tuple
-Point to rotate around.
-point : tuple
-Point that is rotating.
-angle : number
-Angle to rotate against.
-degrees : boolean
-If True, assumes the given angles are in degrees instead of radians - default is False.
-
-Returns
--------
-qx, qy
-x and y components of the point.
-"""
+    """
+    Rotate a point around another point.
+    
+    Parameters
+    ----------
+    origin : tuple
+    Point to rotate around.
+    point : tuple
+    Point that is rotating.
+    angle : number
+    Angle to rotate against.
+    degrees : boolean
+    If True, assumes the given angles are in degrees instead of radians - default is False.
+    
+    Returns
+    -------
+    qx, qy
+    x and y components of the point.
+    """
     # completely stolen from Mark Dickinson from stackoverflow
     if degrees:
         angle = m.radians(angle)
@@ -486,24 +490,24 @@ x and y components of the point.
 
 
 def rotate_rect(origin, rect, angle, degrees=False):
-"""
-Rotate a rectangle around a point.
-
-Parameters
-----------
-origin : tuple
-Point to rotate around.
-rect : tuple
-Rectangle that is rotating.
-angle : number
-Angle to rotate against.
-degrees : boolean
-If True, assumes the given angles are in degrees instead of radians - default is False.
-
-Returns
--------
-List of four rotated points.
-"""
+    """
+    Rotate a rectangle around a point.
+    
+    Parameters
+    ----------
+    origin : tuple
+    Point to rotate around.
+    rect : tuple
+    Rectangle that is rotating.
+    angle : number
+    Angle to rotate against.
+    degrees : boolean
+    If True, assumes the given angles are in degrees instead of radians - default is False.
+    
+    Returns
+    -------
+    List of four rotated points.
+    """
     if degrees:
         angle = m.radians(angle)
 
@@ -516,29 +520,29 @@ List of four rotated points.
 
 
 def split_string_into_sections(raw_string, split_text, lines=True):
-"""
-Turn a raw string format below into a dictionary where each value is a list.
-
-section one:
-line1
-line2
-section two:
-line 1
-
-Parameters
-----------
-raw_string : string
-Raw string to format into dictionary.
-split_text : string
-Text which splits each section.
-lines : boolean
-If True, split text into lines instead of raw strings - default is True.
-
-Returns
--------
-sections
-Dictionary containing each section as a list.
-"""
+    """
+    Turn a raw string format below into a dictionary where each value is a list.
+    
+    section one:
+    line1
+    line2
+    section two:
+    line 1
+    
+    Parameters
+    ----------
+    raw_string : string
+    Raw string to format into dictionary.
+    split_text : string
+    Text which splits each section.
+    lines : boolean
+    If True, split text into lines instead of raw strings - default is True.
+    
+    Returns
+    -------
+    sections
+    Dictionary containing each section as a list.
+    """
     split_finder_pattern = re.compile(split_text+" [a-zA-Z0-9_]+:")
 
     sections_names = [n[len(split_text)+1:-1] for n in re.findall(split_finder_pattern, raw_string)]
@@ -557,25 +561,25 @@ Dictionary containing each section as a list.
 
 
 def turn_string_into_dict(string_data, convert_keys=False):
-"""
-Turn a raw string format below into a dictionary where each line is a key-value pair.
-
-key1=value1
-key2=value2
-key3=value3
-
-Parameters
-----------
-string_data : string
-Raw string to format into dictionary.
-convert_keys : boolean
-If True, convert key strings into other data types - default is False.
-
-Returns
--------
-dictionary
-Dictionary of generated key-value pairs.
-"""
+    """
+    Turn a raw string format below into a dictionary where each line is a key-value pair.
+    
+    key1=value1
+    key2=value2
+    key3=value3
+    
+    Parameters
+    ----------
+    string_data : string
+    Raw string to format into dictionary.
+    convert_keys : boolean
+    If True, convert key strings into other data types - default is False.
+    
+    Returns
+    -------
+    dictionary
+    Dictionary of generated key-value pairs.
+    """
     dictionary = {}
 
     string_data_lines = string_data.split("\n")
@@ -592,20 +596,20 @@ Dictionary of generated key-value pairs.
 
 
 def convert_string_to_alternate_type(value_string):
-"""
-Convert a string value into another data type.
-This function is recursive so arguments needed to create complex types will also be converted to alternate types.
-
-Parameters
-----------
-value_string : string
-Raw string to format into another data type.
-
-Returns
--------
-value_converted
-Original string as a new data type.
-"""
+    """
+    Convert a string value into another data type.
+    This function is recursive so arguments needed to create complex types will also be converted to alternate types.
+    
+    Parameters
+    ----------
+    value_string : string
+    Raw string to format into another data type.
+    
+    Returns
+    -------
+    value_converted
+    Original string as a new data type.
+    """
     # setup scriptable types if they have not already been set up
     # if not scriptable_types:
 
@@ -750,25 +754,25 @@ Original string as a new data type.
 
 
 def bound_text(font, rect, text, safe_bounding=False):
-"""
-Split a string of text into lines such that they won't exceed the bounds of a rectangle when rendered.
-
-Parameters
-----------
-font : graphics.Font
-Font of the text.
-rect : pygame.Rect
-Rectangle whose dimensions will be used for bounding.
-text : string
-Text to bound.
-safe_bounding : boolean
-If True, text is guaranteed not to go outside of bounds when rendered, but may not use all available space - default is False.
-
-Returns
--------
-lines
-List of lines of text.
-"""
+    """
+    Split a string of text into lines such that they won't exceed the bounds of a rectangle when rendered.
+    
+    Parameters
+    ----------
+    font : graphics.Font
+    Font of the text.
+    rect : pygame.Rect
+    Rectangle whose dimensions will be used for bounding.
+    text : string
+    Text to bound.
+    safe_bounding : boolean
+    If True, text is guaranteed not to go outside of bounds when rendered, but may not use all available space - default is False.
+    
+    Returns
+    -------
+    lines
+    List of lines of text.
+    """
     def handle_word(w):
         if word == "\n":
             result_w = ""
@@ -822,39 +826,39 @@ List of lines of text.
 
 
 def encrypt_value(value):
-"""
-Encrypt a given number. Use the decrypt_value function to decrypt the value.
-
-Parameters
-----------
-value : number
-Plaintext.
-
-Returns
--------
-encrypted_value
-Ciphertext.
-"""
+    """
+    Encrypt a given number. Use the decrypt_value function to decrypt the value.
+    
+    Parameters
+    ----------
+    value : number
+    Plaintext.
+    
+    Returns
+    -------
+    encrypted_value
+    Ciphertext.
+    """
     encrypted_value = ((value+31.4421)*9.88)**2
     return encrypted_value
 
 
 def decrypt_value(value, int_check=False):
-"""
-Decrypt a given ciphertext from encrypt_value.
-
-Parameters
-----------
-value : number
-Ciphertext.
-int_check : boolean
-If True, gives warning if the decrypted value that should be an integer isn't - default is False.
-
-Returns
--------
-decrypted_value
-Plaintext.
-"""
+    """
+    Decrypt a given ciphertext from encrypt_value.
+    
+    Parameters
+    ----------
+    value : number
+    Ciphertext.
+    int_check : boolean
+    If True, gives warning if the decrypted value that should be an integer isn't - default is False.
+    
+    Returns
+    -------
+    decrypted_value
+    Plaintext.
+    """
     decrypted_value = ((value**0.5)/9.88)-31.4421
 
     if int_check:
@@ -868,23 +872,23 @@ Plaintext.
 
 
 def check_collision(rect, collision_mask, collision_dict, exceptions, obj=None):
-"""
-Check whether collision is occuring within a specific rectangle.
-
-Parameters
-----------
-rect : number
-Entity bounding rectangle.
-collision_dict : dictionary
-Dictionary containing the things that you want to check for collision against.
-exceptions : collection
-Any objects that you ignore in collision.
-
-Returns
--------
-colliding
-The first object that there was a collision against.
-"""
+    """
+    Check whether collision is occuring within a specific rectangle.
+    
+    Parameters
+    ----------
+    rect : number
+    Entity bounding rectangle.
+    collision_dict : dictionary
+    Dictionary containing the things that you want to check for collision against.
+    exceptions : collection
+    Any objects that you ignore in collision.
+    
+    Returns
+    -------
+    colliding
+    The first object that there was a collision against.
+    """
     def get_entities(entity_list):
         chosen_entities = []
         for ent_type, can_collide in collision_dict.items():
@@ -957,27 +961,27 @@ The first object that there was a collision against.
 
 
 def check_line_collision(p1, p2, collision_dict, exceptions, obj=None):
-"""
-Checking for collision with a line.
-Should only use for testing whether sightlines should be tested.
-Don't use it on Mask_Levels. Doesn't take into account mask collision.
-
-Parameters
-----------
-p1 : tuple
-First point.
-p2 : tuple
-Second point.
-collision_dict : dictionary
-Dictionary containing the things that you want to check for collision against.
-exceptions : collection
-Any objects that you ignore in collision.
-
-Returns
--------
-colliding
-The first object that there was a collision against.
-"""
+    """
+    Checking for collision with a line.
+    Should only use for testing whether sightlines should be tested.
+    Don't use it on Mask_Levels. Doesn't take into account mask collision.
+    
+    Parameters
+    ----------
+    p1 : tuple
+    First point.
+    p2 : tuple
+    Second point.
+    collision_dict : dictionary
+    Dictionary containing the things that you want to check for collision against.
+    exceptions : collection
+    Any objects that you ignore in collision.
+    
+    Returns
+    -------
+    colliding
+    The first object that there was a collision against.
+    """
     def get_entities(entity_list):
         chosen_entities = []
         for ent_type, can_collide in collision_dict.items():
@@ -1049,21 +1053,21 @@ The first object that there was a collision against.
 
 
 def get_variable_value(variable_name, variable_obj=None):
-"""
-Get the value of a variable, either an object attribute, or a variable from a module.
-
-Parameters
-----------
-variable_name : string
-Name of variable to get.
-variable_obj : object
-Object to get variable from. If no object is given the object will be the global_values module - Default is None.
-
-Returns
--------
-value
-Return the value of the variable.
-"""
+    """
+    Get the value of a variable, either an object attribute, or a variable from a module.
+    
+    Parameters
+    ----------
+    variable_name : string
+    Name of variable to get.
+    variable_obj : object
+    Object to get variable from. If no object is given the object will be the global_values module - Default is None.
+    
+    Returns
+    -------
+    value
+    Return the value of the variable.
+    """
     if variable_obj:
         value = getattr(variable_obj, variable_name)
     else:
@@ -1072,18 +1076,18 @@ Return the value of the variable.
 
 
 def set_variable_value(variable_name, value, variable_obj):
-"""
-Set the value of a variable, either an object attribute or variable from a module.
-
-Parameters
-----------
-variable_name : string
-Name of variable to set.
-value : object
-The variable is set to this value.
-variable_obj : object
-Object to get variable from. If no object is given the object will be the global_values module - Default is None.
-"""
+    """
+    Set the value of a variable, either an object attribute or variable from a module.
+    
+    Parameters
+    ----------
+    variable_name : string
+    Name of variable to set.
+    value : object
+    The variable is set to this value.
+    variable_obj : object
+    Object to get variable from. If no object is given the object will be the global_values module - Default is None.
+    """
     if variable_obj:
         setattr(variable_obj, variable_name, value)
     else:
@@ -1091,25 +1095,25 @@ Object to get variable from. If no object is given the object will be the global
 
 
 def get_mouse_point_distance(min_distance, max_distance, point=g.SCREEN_RECT.center, normalise=False):
-"""
-Gets the distance of the mouse point.
-
-Parameters
-----------
-min_distance : number
-Minimum distance for the mouse point. Before this point 0 will be returned instead.
-max_distance : number
-Maximum distance for the mouse point.
-point : object
-The point from which to measure the mouse distance from. Default is the center of the screen.
-normalise : boolean
-If True, distance will be normalised (will be set between 0 and 1) - Default is False.
-
-Returns
--------
-dist
-Return the distance of the mouse point.
-"""
+    """
+    Gets the distance of the mouse point.
+    
+    Parameters
+    ----------
+    min_distance : number
+    Minimum distance for the mouse point. Before this point 0 will be returned instead.
+    max_distance : number
+    Maximum distance for the mouse point.
+    point : object
+    The point from which to measure the mouse distance from. Default is the center of the screen.
+    normalise : boolean
+    If True, distance will be normalised (will be set between 0 and 1) - Default is False.
+    
+    Returns
+    -------
+    dist
+    Return the distance of the mouse point.
+    """
     mx, my = p.mouse.get_pos()
     dist = clamp(get_distance(point[0], point[1], mx, my), min_distance, max_distance)
 
@@ -1122,45 +1126,45 @@ Return the distance of the mouse point.
 
 
 def get_mouse_point_angle(point=g.SCREEN_RECT.center):
-"""
-Gets the angle of the mouse point.
-
-Parameters
-----------
-point : object
-The point from which to measure the mouse angle from. Default is the center of the screen.
-
-Returns
--------
-obj
-Return the mouse point angle.
-"""
+    """
+    Gets the angle of the mouse point.
+    
+    Parameters
+    ----------
+    point : object
+    The point from which to measure the mouse angle from. Default is the center of the screen.
+    
+    Returns
+    -------
+    obj
+    Return the mouse point angle.
+    """
     mx, my = p.mouse.get_pos()
     angle = get_angle(point[0], point[1], mx, my)
     return angle
 
 
 def choose_weighted_object(obj_dict):
-"""
-For choosing between a series of objects, each with a different choice 'weight'.
-
-Parameters
-----------
-obj_dict : dictionary
-Dictionary containing the collection of objects to choose between, and their weights. Each key is an object, and each value is a weight.
-For example:
-{
-obj1 : 1,
-obj2 : 2,
-obj3 : 5
-}
-would result in obj1 having a 12.5% chance of being chosen, ob2 having a 25% chance, and obj3 having a 62.5% chance
-
-Returns
--------
-obj
-Return the weighted object.
-"""
+    """
+    For choosing between a series of objects, each with a different choice 'weight'.
+    
+    Parameters
+    ----------
+    obj_dict : dictionary
+    Dictionary containing the collection of objects to choose between, and their weights. Each key is an object, and each value is a weight.
+    For example:
+    {
+    obj1 : 1,
+    obj2 : 2,
+    obj3 : 5
+    }
+    would result in obj1 having a 12.5% chance of being chosen, ob2 having a 25% chance, and obj3 having a 62.5% chance
+    
+    Returns
+    -------
+    obj
+    Return the weighted object.
+    """
     summed_values = []
     value_list = list(obj_dict.values())
     for i, value in enumerate(value_list):
@@ -1174,19 +1178,19 @@ Return the weighted object.
 
 
 def get_opposite_direction(direction):
-"""
-Gets the opposite direction of a given direction. Supported directions are "up", "down", "left" and "right".
-
-Parameters
-----------
-obj_dict : string
-Direction to reverse.
-
-Returns
--------
-direction
-The opposite direction.
-"""
+    """
+    Gets the opposite direction of a given direction. Supported directions are "up", "down", "left" and "right".
+    
+    Parameters
+    ----------
+    obj_dict : string
+    Direction to reverse.
+    
+    Returns
+    -------
+    direction
+    The opposite direction.
+    """
     directions = ["up", "down", "left", "right"]
     opposite_directions = ["down", "up", "right", "left"]
     original_direction = direction
@@ -1199,25 +1203,25 @@ The opposite direction.
 
 
 def pin_rect(rect, rect_point, point, in_place=False):
-"""
-Set rect position so that a specific part of the rect is in a specific point.
-
-Parameters
-----------
-rect : pygame.Rect
-Rectangle to pin.
-rect_point : tuple
-Part of rectangle to pin. (0, 0) would be the topleft corner, (1,1) the bottom right, (0.5, 0.5) the center, etc.
-point : tuple
-Point to pin rect_point to.
-in_place : boolean
-If True, the rectangle is replaced - Default is False.
-
-Returns
--------
-new_rect
-Rectangle pinned in a specific point.
-"""
+    """
+    Set rect position so that a specific part of the rect is in a specific point.
+    
+    Parameters
+    ----------
+    rect : pygame.Rect
+    Rectangle to pin.
+    rect_point : tuple
+    Part of rectangle to pin. (0, 0) would be the topleft corner, (1,1) the bottom right, (0.5, 0.5) the center, etc.
+    point : tuple
+    Point to pin rect_point to.
+    in_place : boolean
+    If True, the rectangle is replaced - Default is False.
+    
+    Returns
+    -------
+    new_rect
+    Rectangle pinned in a specific point.
+    """
     if in_place:
         new_rect = rect
     else:
@@ -1236,16 +1240,16 @@ Rectangle pinned in a specific point.
 
 
 def scale_rect(rect, scale):
-"""
-Scale a rectangle in place by a given multiplier.
-
-Parameters
-----------
-rect : pygame.Rect
-Rectangle to scale.
-scale : number
-Scale multiplier.
-"""
+    """
+    Scale a rectangle in place by a given multiplier.
+    
+    Parameters
+    ----------
+    rect : pygame.Rect
+    Rectangle to scale.
+    scale : number
+    Scale multiplier.
+    """
     scaled_width = rect.width*scale
     scaled_height = rect.height*scale
     old_center = rect.center
@@ -1257,51 +1261,51 @@ Scale multiplier.
 
 
 def get_random_between(v1, v2):
-"""
-Get a random value between two given values.
-
-Parameters
-----------
-v1 : number
-First value.
-v2 : number
-Second value.
-
-Returns
--------
-val
-Randomly picked value.
-"""
+    """
+    Get a random value between two given values.
+    
+    Parameters
+    ----------
+    v1 : number
+    First value.
+    v2 : number
+    Second value.
+    
+    Returns
+    -------
+    val
+    Randomly picked value.
+    """
     val = v1+(r.random()*(v2-v1))
     return val
 
 
 def get_pretty_time(ticks, show_minutes=True, show_seconds=True, show_milliseconds=True, separator=":", digits=2, zfill=True):
-"""
-Takes a number of ticks and converts them into a string showing the time they would take up.
-
-Parameters
-----------
-ticks : list
-Numbers of in-game updates.
-show_minutes : boolean
-If True, minutes will be shown on the time - Default is True.
-show_seconds : boolean
-If True, seconds will be shown on the time - Default is True.
-show_milliseconds : boolean
-If True, milliseconds will be shown on the time - Default is True.
-separator : character
-Character which separates the time values.
-digits : number
-Amount of digits shown for each time section.
-zfill : boolean
-If True, the digits will be filled with zeroes - Default is True.
-
-Returns
--------
-time_string
-Time formatted as a pretty string.
-"""
+    """
+    Takes a number of ticks and converts them into a string showing the time they would take up.
+    
+    Parameters
+    ----------
+    ticks : list
+    Numbers of in-game updates.
+    show_minutes : boolean
+    If True, minutes will be shown on the time - Default is True.
+    show_seconds : boolean
+    If True, seconds will be shown on the time - Default is True.
+    show_milliseconds : boolean
+    If True, milliseconds will be shown on the time - Default is True.
+    separator : character
+    Character which separates the time values.
+    digits : number
+    Amount of digits shown for each time section.
+    zfill : boolean
+    If True, the digits will be filled with zeroes - Default is True.
+    
+    Returns
+    -------
+    time_string
+    Time formatted as a pretty string.
+    """
     seconds = (ticks//g.MAX_TICK_RATE)
     leftover_seconds = int(seconds % 60)
     minutes = int(seconds//60)
@@ -1352,9 +1356,9 @@ Time formatted as a pretty string.
 
 
 def quit_game():
-"""
-Safely quits the game.
-"""
+    """
+    Safely quits the game.
+    """
     for saved_data_file in g.saved_data_dicts.values():
         if saved_data_file.save_on_quit:
             saved_data_file.save()

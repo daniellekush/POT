@@ -3,6 +3,7 @@ import math as m
 import time as t
 import random as r
 import os
+import sys
 
 #os.environ["PYGAME_FREETYPE"] = "1"
 p.mixer.pre_init(frequency=44100, size=-16, channels=60, buffer=128)
@@ -116,6 +117,9 @@ saving.Saved_Data("test_data", save_on_quit=True)
 #saving.Saved_Variable("y", g.camera, "test_data", load_on_start=True, save_on_change=True)
 
 #particles.Rain(5, 0.05, 8, gy=5, max_particles=2000)
+
+g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
+
 
 
 def game_over():
@@ -261,11 +265,8 @@ def update():
     sound.update_emitter_volumes()
 
     if  "main" in g.current_states:
-        for entity in g.game_objects.get("class_Game_Object", []):
-            entity.old_x = entity.x
-            entity.old_y = entity.y
-            entity.old_width = entity.width
-            entity.old_height = entity.height
+        for game_object in g.game_objects.get("class_Game_Object", []):
+            game_object.set_old_properties()
 
     handle_input()
 
@@ -347,37 +348,56 @@ def order_entity(obj):
 def order_interface_component(obj):
     order = obj.draw_bias
     return order
+    
+#fill in the lighting surfaces
+def reset_lighting():
+    g.darkness_surface.fill(g.BLACK)
+    g.darkness_surface.set_alpha(255-g.MIN_LIGHT_LEVEL)
+    if g.ENABLE_COLOURED_LIGHTING:
+        g.light_colour_surface.fill((0,0,0,0))
+
+#get an ordered list of all the objects to draw
+def get_objects_to_draw(include_entities, include_interface_components):
+    drawing_objects = []
+    
+    #background interface_components
+    if include_interface_components:
+        drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and interface_component.background], key=order_interface_component ))
+
+    if include_entities:
+        if "main" in g.current_states:
+            drawing_objects += g.active_levels
+            drawing_objects += list(sorted([entity for entity in g.game_objects.get("class_Entity", []) if entity.visible], key=order_entity ))
+            
+            drawing_objects += g.light_grids
+    
+    #foreground interface_components
+    if include_interface_components:
+        drawing_objects += events.get_tagged_events({"overlay"})
+        drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and not interface_component.background], key=order_interface_component ))
+    
+  
+    return drawing_objects
+    
+def draw_lighting():
+    if g.ENABLE_LIGHTING:
+        if g.ENABLE_COLOURED_LIGHTING:
+            g.screen.blit(g.light_colour_surface, (0,0))
+        g.screen.blit(g.darkness_surface, (0,0))
 
 def draw():
         
     if "main" in g.current_states and g.ENABLE_LIGHTING:
-        g.darkness_surface.fill(g.BLACK)
-        g.darkness_surface.set_alpha(255-g.MIN_LIGHT_LEVEL)
-        if g.ENABLE_COLOURED_LIGHTING:
-            g.light_colour_surface.fill((0,0,0,0))
+        reset_lighting()
         
-    drawing_objects = []
-    #background interface_components
-    drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and interface_component.background], key=order_interface_component ))
-
-    if "main" in g.current_states:
-        drawing_objects += g.active_levels
-        drawing_objects += list(sorted([entity for entity in g.game_objects.get("class_Entity", []) if entity.visible], key=order_entity ))
+    drawing_objects = get_objects_to_draw(True, False)
     for obj in drawing_objects:
         obj.draw()
-
+        
     if "main" in g.current_states:
-        for light_grid in g.light_grids:
-            light_grid.draw()
-
-        if g.ENABLE_LIGHTING:
-            if g.ENABLE_COLOURED_LIGHTING:
-                g.screen.blit(g.light_colour_surface, (0,0))
-            g.screen.blit(g.darkness_surface, (0,0))
-             
-    #foreground interface_components
-    drawing_objects = events.get_tagged_events({"overlay"})
-    drawing_objects += list(sorted([interface_component for interface_component in g.game_objects.get("class_Interface_Component", []) if interface_component.active and interface_component.visible and not interface_component.background], key=order_interface_component ))
+        draw_lighting()
+        
+    drawing_objects = get_objects_to_draw(False, True)
     for obj in drawing_objects:
         obj.draw()
 
@@ -390,57 +410,67 @@ def draw():
     for saved_variable in g.saved_variables:
         saved_variable.update()
 
-g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
-
 
 
 RUNNING = True
-while RUNNING:
-    #update
-    if g.time_to_next_tick <= g.time_to_next_frame:
-        update_type = "tick"
-        elapsed_time = g.time_to_next_tick
-        
-        g.time_to_next_frame -= elapsed_time
-        g.time_to_next_tick = g.MIN_TICK_TIME
 
-        old_tick_perf_counter = g.tick_perf_counter
-        g.tick_perf_counter = t.perf_counter()
-        elapsed_tick_time = g.tick_perf_counter-old_tick_perf_counter
-        g.tick_rate = 1/elapsed_tick_time
-        
-    else:
-        update_type = "frame"
-        elapsed_time = g.time_to_next_frame
-        
-        g.time_to_next_tick -= elapsed_time
-        g.time_to_next_frame = g.MIN_FRAME_TIME
-
-        old_frame_perf_counter = g.frame_perf_counter
-        g.frame_perf_counter = t.perf_counter()
-        elapsed_frame_time = g.frame_perf_counter-old_frame_perf_counter
-        g.frame_rate = 1/elapsed_frame_time
-        
-    if update_type == "tick":
-        handle_internal_commands("start")
-        update()
-        handle_internal_commands("end")
-        g.tick_count += 1
-    elif update_type == "frame":
-        if g.DRAW_BACKGROUND:
-            if g.BACKGROUND_SURFACE:
-                screen.blit(g.BACKGROUND_SURFACE)
-            else:
-                g.screen.fill(g.BACKGROUND_COLOUR)
-        draw()
-        p.display.flip()
-        g.frame_count += 1
-
-    #print("interval")
-    if elapsed_time:
-        if update_type == "tick":
-            g.clock.tick(1/elapsed_time)
-        elif update_type == "frame":
-            g.clock.tick(1/elapsed_time)
+try:
+    while RUNNING:
+        #update
+        if g.time_to_next_tick <= g.time_to_next_frame:
+            update_type = "tick"
+            elapsed_time = g.time_to_next_tick
+            
+            g.time_to_next_frame -= elapsed_time
+            g.time_to_next_tick = g.MIN_TICK_TIME
     
+            old_tick_perf_counter = g.tick_perf_counter
+            g.tick_perf_counter = t.perf_counter()
+            elapsed_tick_time = g.tick_perf_counter-old_tick_perf_counter
+            g.tick_rate = 1/elapsed_tick_time
+            
+        else:
+            update_type = "frame"
+            elapsed_time = g.time_to_next_frame
+            
+            g.time_to_next_tick -= elapsed_time
+            g.time_to_next_frame = g.MIN_FRAME_TIME
+    
+            old_frame_perf_counter = g.frame_perf_counter
+            g.frame_perf_counter = t.perf_counter()
+            elapsed_frame_time = g.frame_perf_counter-old_frame_perf_counter
+            g.frame_rate = 1/elapsed_frame_time
+            
+        if update_type == "tick":
+            handle_internal_commands("start")
+            update()
+            handle_internal_commands("end")
+            g.tick_count += 1
+        elif update_type == "frame":
+            if g.DRAW_BACKGROUND:
+                if g.BACKGROUND_SURFACE:
+                    screen.blit(g.BACKGROUND_SURFACE)
+                else:
+                    g.screen.fill(g.BACKGROUND_COLOUR)
+            draw()
+            p.display.flip()
+            g.frame_count += 1
+    
+        #print("interval")
+        if elapsed_time:
+            if update_type == "tick":
+                g.clock.tick(1/elapsed_time)
+            elif update_type == "frame":
+                g.clock.tick(1/elapsed_time)
+except:
+    import ctypes, traceback, platform
+    if platform.system() == "Windows":
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        
+        if exc_type != SystemExit:
+            MessageBox = ctypes.windll.user32.MessageBoxW 
+            MessageBox(None, "Exception thrown\nType: "+str(exc_type)+"\nValue: "+str(exc_value)+"\nTraceback:\n"+str(traceback), 'Error', 0)
+finally:
+    p.display.quit()
+    sys.exit()
     

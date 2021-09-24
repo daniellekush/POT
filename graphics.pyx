@@ -7,7 +7,6 @@ import global_values as g
 
 import math as m
 import pygame as p
-import pygame.freetype as freetype
 import os
 
 class Sprite():
@@ -47,6 +46,9 @@ class Sprite():
 
         if create_extras:
             self.create_extras()
+
+    def get_size(self):
+        return self.surface.get_size()
 
     def convert_simple(self):
         if self.transparent:
@@ -335,8 +337,10 @@ class Animation():
 
 #Animation_System class for holding multiple g.animations
 class Animation_System():
-    def __init__(self, spritesheet, anim_id_dict, current_animation_name, anim_timer, loop=True, global_frame=False):
+    def __init__(self, spritesheet, anim_id_dict, current_animation_name, anim_timer, loop=True, global_frame=False, active=True):
         self.anim_timer = anim_timer
+        
+        self.active = active
         
         self.spritesheet = spritesheet
         #generate animations for this Animation_System object
@@ -356,7 +360,8 @@ class Animation_System():
 
     #progress current animation
     def update(self):
-        self.animations[self.current_animation_name].update()
+        if self.active:
+            self.animations[self.current_animation_name].update()
 
     #get current frame of current animation
     def get_current_frame(self):
@@ -549,7 +554,7 @@ def draw_text_lines(pos, font, text_lines, colour, background=None, antialias=Fa
         
     x, y = pos
     for line in text_lines:
-        surface = font.render(line, antialias, colour, background=background)
+        surface = font.render(line, antialias, colour, background)
         draw_surface.blit(surface, (x, y))
         y += font.get_linesize()
 
@@ -559,7 +564,7 @@ def draw_text_centered(pos, font, text, colour, background=None, antialias=False
     else:
         draw_surface = g.screen
         
-    surface = font.render(text, antialias, colour, background=background)
+    surface = font.render(text, antialias, colour, background)
     width, height = surface.get_size()
     x, y = pos[0]-int(width/2), pos[1]-int(height/2)
                         

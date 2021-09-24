@@ -1361,4 +1361,4 @@ Safely quits the game.
 
     p.display.quit()
     sys.exit()
-    quit()
+

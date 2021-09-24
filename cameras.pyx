@@ -180,6 +180,10 @@ class Camera(entities.Entity):
             gfx.draw_rotated_surface(new_surface, rect.topleft, angle, cx=cx, cy=cy, ox=ox, oy=oy)
         else:
             g.screen.blit(new_surface, new_rect)
+            
+    def draw_transformed_graphics(self, graphics, rect, angle=0, cx=0.5, cy=0.5, ox=0, oy=0):
+        surface = gfx.get_surface(graphics)
+        return self.draw_transformed_surface(surface, rect, angle=angle, cx=cx, cy=cy, ox=ox, oy=oy)
 
     def draw_transformed_rect(self, colour, rect, border=0):
         rect = self.transform_rect(rect)
@@ -203,10 +207,10 @@ class Camera(entities.Entity):
         angle = util.get_angle(p1[0], p1[1], p2[0], p2[1])
         
         arrow_angle1 = angle-arrow_angle_difference
-        arrow_point1 = get_line_end(p2[0], p2[1], arrow_angle1, arrow_width)
+        arrow_point1 = util.get_line_end(p2[0], p2[1], arrow_angle1, arrow_width)
         
         arrow_angle2 = angle+arrow_angle_difference
-        arrow_point2 = get_line_end(p2[0], p2[1], arrow_angle2, arrow_width)
+        arrow_point2 = util.get_line_end(p2[0], p2[1], arrow_angle2, arrow_width)
         
         self.draw_transformed_line(colour, p1, p2, width=width)
         self.draw_transformed_line(tip_colour, p2, arrow_point1, width=width)

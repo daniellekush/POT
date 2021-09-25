@@ -2,7 +2,7 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import global_values as g
+from . import global_values as g
 
 import pygame as p
 import random as r
@@ -1362,7 +1362,10 @@ def quit_game():
     for saved_data_file in g.saved_data_dicts.values():
         if saved_data_file.save_on_quit:
             saved_data_file.save()
+            
+    g.RUNNING = False
 
     p.display.quit()
     sys.exit()
+    
 

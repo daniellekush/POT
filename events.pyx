@@ -2,11 +2,10 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import global_values as g
-import utilities as util
-import graphics as gfx
-import sound
-import game_objects
+from . import global_values as g
+from . import utilities as util
+from . import graphics as gfx
+from . import game_objects
 
 import math as m
 import pygame as p
@@ -374,8 +373,9 @@ class Numeric_Variable_Target_Event(Event):
 
 
 class String_Reveal_Event(Event):
+    
     def __init__(self, pipe, full_string, timer, **_kwargs):
-
+        
         kwargs = {"character_reveal_timer":None, "variable_name":None, "variable_obj":None,
                   "character_reveal_sound":None, "start_character_reveal_sound":None, "end_character_reveal_sound":None, "reveal_sound_ignore_whitespace":True}
         kwargs.update(_kwargs)
@@ -395,6 +395,7 @@ class String_Reveal_Event(Event):
         self.amount_of_revealed_characters = 0
 
     def update(self):
+        from . import sound
         Event.update(self)
 
         old_reveal_progress = self.reveal_progress
@@ -737,7 +738,8 @@ class Overlay_Event(Event):
 
 class Play_Sound_Event(Event):
     def __init__(self, pipe, timer, sound, **_kwargs):
-
+        from . import sound
+        
         kwargs = {"loops":0, "maxtime":0, "fade_ms":0, "delay":True, "stop_on_end":False}
         kwargs.update(_kwargs)
         
@@ -750,6 +752,7 @@ class Play_Sound_Event(Event):
             sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
 
     def end(self):
+        from . import sound
         Event.end(self)
         if self.delay:
             sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
@@ -758,7 +761,8 @@ class Play_Sound_Event(Event):
 
 class Stop_Sound(Event):
     def __init__(self, pipe, timer, sound, **_kwargs):
-
+        from . import sound
+        
         kwargs = {"delay":True}
         kwargs.update(_kwargs)
         
@@ -771,6 +775,7 @@ class Stop_Sound(Event):
             sound.stop_sound(self.sound)
 
     def end(self):
+        from . import sound
         Event.end(self)
         if self.delay:
             sound.stop_sound(self.sound)

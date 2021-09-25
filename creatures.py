@@ -1,7 +1,6 @@
-import global_values as g
-import utilities as util
-
-import entities
+from . import global_values as g
+from . import utilities as util
+from . import entities
 
 import math as m
 import random as r

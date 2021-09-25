@@ -2,12 +2,12 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import global_values as g
-import utilities as util
-import graphics as gfx
-import game_objects
-import levels
-import events
+from . import global_values as g
+from . import utilities as util
+from . import graphics as gfx
+from . import game_objects
+from . import levels
+from . import events
 
 import pygame as p
 import math as m

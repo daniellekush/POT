@@ -10,115 +10,116 @@ p.mixer.pre_init(frequency=44100, size=-16, channels=60, buffer=128)
 p.init()
 p.mixer.set_num_channels(16)
 
-import sound
-import display
-import events
+from . import sound
+from . import display
+from . import events
 
-import interface_components
-import cameras
-import creatures
-import levels
-import entities
-import graphics as gfx
-import saving
-import ai
-import particles
-import light
-import npc
+from . import interface_components
+from . import cameras
+from . import creatures
+from . import levels
+from . import entities
+from . import graphics as gfx
+from . import saving
+from . import ai
+from . import particles
+from . import light
+from . import npc
 
-import global_values as g
-import utilities as util
-
-display.setup_display()
-
-sound.load_sound_dict()
+from . import global_values as g
+from . import utilities as util
 
 from operator import attrgetter    
+
+display.setup_display()
+sound.load_sound_dict()
 
 gfx.SysFont("arial_font_s1", "arial", 10)
 gfx.SysFont("arial_font_s2", "arial", 20)
 gfx.SysFont("arial_font_s3", "arial", 30)
 
-
+   
+   
+def setup():
     
-g.camera = cameras.Camera(p.Rect(10,50,2200,(g.HEIGHT/g.WIDTH)*2200 ), solid=True, collision_dict={"border":False, "levels":False})
-
-player_spritesheet = gfx.Spritesheet("player_spritesheet", 32, 32, transparency_pixel=g.TRANSPARENCY_COLOUR)
-buttons_spritesheet = gfx.Spritesheet("buttons_spritesheet", 64, 32)
-
-player_anims = gfx.Animation_System(player_spritesheet,
-                               { frozenset(["static"]):0,
-                               frozenset(["up"]):1,
-                               frozenset(["down"]):2,
-                               frozenset(["left"]):3,
-                               frozenset(["right"]):4,
-                                frozenset(["upleft"]):5,
-                                frozenset(["upright"]):6,
-                                frozenset(["downleft"]):7,
-                                frozenset(["downright"]):8},
-                               frozenset(["static"]), g.MAX_TICK_RATE)
-
-#tile_spritesheet = gfx.Spritesheet("tiles_test", 32, 32, transparency_pixel=g.TRANSPARENCY_COLOUR)
-#misc_spritesheet = gfx.Spritesheet("misc_test", 32, 32, transparency_pixel=g.TRANSPARENCY_COLOUR)
-gfx.create_spritesheets(32, 32)
-
-levels.Tile_Info("floor", False, (None, (1,0)))
-levels.Tile_Info("wall", True, (None, (0,0)))
-
-level = levels.Tile_Level("test2.lvl", 50, 50)
-#level = levels.Mask_Level("test3", "test3", 100, 100, level_scale_x=g.LEVEL_SCALE_X, level_scale_y=g.LEVEL_SCALE_Y)
-            
-node_map = ai.Node_Map(level)
-ai.generate_from_level(node_map, level, 50, {"levels":True, "border":True, "camera":False}, all_directions=False, cardinal=True)
-
-#light_grid = light.Light_Grid(level, 50, 50, min_light_level=0.3)
-#lgs = light.Light_Grid_Source(light_grid, 1700, 800, 20, 400)
-
-
-g.player = creatures.Player(p.Rect(0,0,48,48*2), player_anims, 100, 10, cw=1, ch=1, max_v=None, max_vy=50, check_grounded=True, collision_dict={})
-g.player.move_to_spawn_point()
-#lgs.center(g.player.rect.center)
-#lgs.set_parent(g.player)
-
-#test_entity = entities.Entity_Test(p.Rect(700,700,50,40), push_bias=-1, solid=True, collision_dict={"class_Player":True})
-
-start_background = interface_components.Background(gfx.load_image("background1"), {"start"})
-game_over_background = interface_components.Background(gfx.load_image("game_over_background1"), {"game_over"})
-
-start_button = interface_components.Button("start_button", p.Rect(util.dnmx(0.4), util.dnmy(0.2), util.dnmx(0.2), util.dnmy(0.1)), buttons_spritesheet.sprites[0][1], buttons_spritesheet.sprites[0][0], {"start"})
-rules_button = interface_components.Button("rules_button", p.Rect(util.dnmx(0.4), util.dnmy(0.4), util.dnmx(0.2), util.dnmy(0.1)), buttons_spritesheet.sprites[2][1], buttons_spritesheet.sprites[2][0], {"start"})
-quit_button = interface_components.Button("quit_button", p.Rect(util.dnmx(0.4), util.dnmy(0.6), util.dnmx(0.2), util.dnmy(0.1)), buttons_spritesheet.sprites[1][1], buttons_spritesheet.sprites[1][0], {"start"})
-
-rules_slides = interface_components.Slides(g.SCREEN_RECT.copy(), ["slide1","slide2","slide3"], {"rules"}, keypress_progression={"backward":p.K_LEFT, "forward":p.K_RIGHT})
-back_to_menu_button = interface_components.Button("back_to_menu_button", p.Rect(util.dnmx(0.0), util.dnmy(0.9), util.dnmx(0.1), util.dnmy(0.1)), buttons_spritesheet.sprites[3][1], buttons_spritesheet.sprites[3][0], {"rules", "game_over"})
-
-
-#test_decoration = interface_components.Decoration(p.Rect(10,300,120,80), player_spritesheet.sprites[0][0], {"start"})
-#test_pie = interface_components.Pie(p.Rect(80, 80, 200, 200), "x", 0, level.width, {"main"}, variable_obj=g.player, border_colour=g.BLACK)
-#test_bar = interface_components.Bar(p.Rect(20, 280, 200, 40), "x", 0, level.width, {"main"}, variable_obj=g.player)
-#test_measurement = interface_components.Measurement([player_spritesheet.sprites[0][0],player_spritesheet.sprites[0][1]], (100,100), (32,32), "x", 50, {"main"}, variable_obj=g.player)
-#test_WIC = entities.World_Interface_Component(p.Rect(180, 180, 200, 200), test_pie)
-#test_monitor = interface_components.Monitor(p.Rect(0, 0, g.fonts["arial_font_s2"].size("000.00")[0], g.fonts["arial_font_s2"].get_linesize()), g.fonts["arial_font_s2"], "mx", {"start","main"}, g.WHITE, background_colour=g.BLACK, variable_obj=g)
-#test_text_box = interface_components.Text_Box(p.Rect(50,50,250,50), g.fonts["arial_font_s2"], "g.player.rect", {"main"}, g.WHITE, border_colour=None, border_width=4, eval_text=True)       
-#g.test_tbs = ""
-#events.String_Reveal_Event(None, "Tab:\t | Newline:\n\n | Good Stuff | Four Spaces: , , , | Annnd we're done! |", g.MAX_TICK_RATE*5,variable_name="test_tbs", active_states={"main"})
-#test_test_box2 = interface_components.Text_Box(p.Rect(300,50,300,400), g.fonts["arial_font_s2"], "g.test_tbs", {"main"}, g.BLUE, border_colour=g.WHITE, background_colour=g.BLACK, center_text=(True, False), safe_bounding=True, eval_text=True) 
-#test_WIC2 = entities.World_Interface_Component(p.Rect(180, 180, 200, 300), test_test_box2)
-
-g.camera.rect.center = g.player.rect.center
-g.camera.set_from_rect()
-g.camera.set_parent(g.player, offset=False)
-
-saving.Saved_Data("test_data", save_on_quit=True)
-#saving.Saved_Variable("x", g.player, "test_data", load_on_start=True, save_on_change=True)
-#saving.Saved_Variable("y", g.player, "test_data", load_on_start=True, save_on_change=True)
-
-#saving.Saved_Variable("x", g.camera, "test_data", load_on_start=True, save_on_change=True)
-#saving.Saved_Variable("y", g.camera, "test_data", load_on_start=True, save_on_change=True)
-
-#particles.Rain(5, 0.05, 8, gy=5, max_particles=2000)
-
-g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
+    g.camera = cameras.Camera(p.Rect(10,50,1500,(g.HEIGHT/g.WIDTH)*1500 ), solid=True, collision_dict={"border":False, "levels":False})
+    
+    player_spritesheet = gfx.Spritesheet("player_spritesheet", 32, 32, transparency_pixel=g.TRANSPARENCY_COLOUR)
+    buttons_spritesheet = gfx.Spritesheet("buttons_spritesheet", 64, 32)
+    
+    player_anims = gfx.Animation_System(player_spritesheet,
+                                   { frozenset(["static"]):0,
+                                   frozenset(["up"]):1,
+                                   frozenset(["down"]):2,
+                                   frozenset(["left"]):3,
+                                   frozenset(["right"]):4,
+                                    frozenset(["upleft"]):5,
+                                    frozenset(["upright"]):6,
+                                    frozenset(["downleft"]):7,
+                                    frozenset(["downright"]):8},
+                                   frozenset(["static"]), g.MAX_TICK_RATE)
+    
+    #tile_spritesheet = gfx.Spritesheet("tiles_test", 32, 32, transparency_pixel=g.TRANSPARENCY_COLOUR)
+    #misc_spritesheet = gfx.Spritesheet("misc_test", 32, 32, transparency_pixel=g.TRANSPARENCY_COLOUR)
+    gfx.create_spritesheets(32, 32)
+    
+    levels.Tile_Info("floor", False, (None, (1,0)))
+    levels.Tile_Info("wall", True, (None, (0,0)))
+    
+    level = levels.Tile_Level("test2.lvl", 50, 50)
+    #level = levels.Mask_Level("test3", "test3", 100, 100, level_scale_x=g.LEVEL_SCALE_X, level_scale_y=g.LEVEL_SCALE_Y)
+                
+    node_map = ai.Node_Map(level)
+    ai.generate_from_level(node_map, level, 50, {"levels":True, "border":True, "camera":False}, all_directions=False, cardinal=True)
+    
+    #light_grid = light.Light_Grid(level, 50, 50, min_light_level=0.3)
+    #lgs = light.Light_Grid_Source(light_grid, 1700, 800, 20, 400)
+    
+    
+    g.player = creatures.Player(p.Rect(0,0,48,48*2), player_anims, 100, 10, cw=1, ch=1, max_v=None, max_vy=50, check_grounded=True, collision_dict={})
+    g.player.move_to_spawn_point()
+    #lgs.center(g.player.rect.center)
+    #lgs.set_parent(g.player)
+    
+    #test_entity = entities.Entity_Test(p.Rect(700,700,50,40), push_bias=-1, solid=True, collision_dict={"class_Player":True})
+    
+    start_background = interface_components.Background(gfx.load_image("background1"), {"start"})
+    game_over_background = interface_components.Background(gfx.load_image("game_over_background1"), {"game_over"})
+    
+    start_button = interface_components.Button("start_button", p.Rect(util.dnmx(0.4), util.dnmy(0.2), util.dnmx(0.2), util.dnmy(0.1)), buttons_spritesheet.sprites[0][1], buttons_spritesheet.sprites[0][0], {"start"})
+    rules_button = interface_components.Button("rules_button", p.Rect(util.dnmx(0.4), util.dnmy(0.4), util.dnmx(0.2), util.dnmy(0.1)), buttons_spritesheet.sprites[2][1], buttons_spritesheet.sprites[2][0], {"start"})
+    quit_button = interface_components.Button("quit_button", p.Rect(util.dnmx(0.4), util.dnmy(0.6), util.dnmx(0.2), util.dnmy(0.1)), buttons_spritesheet.sprites[1][1], buttons_spritesheet.sprites[1][0], {"start"})
+    
+    rules_slides = interface_components.Slides(g.SCREEN_RECT.copy(), ["slide1","slide2","slide3"], {"rules"}, keypress_progression={"backward":p.K_LEFT, "forward":p.K_RIGHT})
+    back_to_menu_button = interface_components.Button("back_to_menu_button", p.Rect(util.dnmx(0.0), util.dnmy(0.9), util.dnmx(0.1), util.dnmy(0.1)), buttons_spritesheet.sprites[3][1], buttons_spritesheet.sprites[3][0], {"rules", "game_over"})
+    
+    
+    #test_decoration = interface_components.Decoration(p.Rect(10,300,120,80), player_spritesheet.sprites[0][0], {"start"})
+    #test_pie = interface_components.Pie(p.Rect(80, 80, 200, 200), "x", 0, level.width, {"main"}, variable_obj=g.player, border_colour=g.BLACK)
+    #test_bar = interface_components.Bar(p.Rect(20, 280, 200, 40), "x", 0, level.width, {"main"}, variable_obj=g.player)
+    #test_measurement = interface_components.Measurement([player_spritesheet.sprites[0][0],player_spritesheet.sprites[0][1]], (100,100), (32,32), "x", 50, {"main"}, variable_obj=g.player)
+    #test_WIC = entities.World_Interface_Component(p.Rect(180, 180, 200, 200), test_pie)
+    #test_monitor = interface_components.Monitor(p.Rect(0, 0, g.fonts["arial_font_s2"].size("000.00")[0], g.fonts["arial_font_s2"].get_linesize()), g.fonts["arial_font_s2"], "mx", {"start","main"}, g.WHITE, background_colour=g.BLACK, variable_obj=g)
+    #test_text_box = interface_components.Text_Box(p.Rect(50,50,250,50), g.fonts["arial_font_s2"], "g.player.rect", {"main"}, g.WHITE, border_colour=None, border_width=4, eval_text=True)       
+    #g.test_tbs = ""
+    #events.String_Reveal_Event(None, "Tab:\t | Newline:\n\n | Good Stuff | Four Spaces: , , , | Annnd we're done! |", g.MAX_TICK_RATE*5,variable_name="test_tbs", active_states={"main"})
+    #test_test_box2 = interface_components.Text_Box(p.Rect(300,50,300,400), g.fonts["arial_font_s2"], "g.test_tbs", {"main"}, g.BLUE, border_colour=g.WHITE, background_colour=g.BLACK, center_text=(True, False), safe_bounding=True, eval_text=True) 
+    #test_WIC2 = entities.World_Interface_Component(p.Rect(180, 180, 200, 300), test_test_box2)
+    
+    g.camera.rect.center = g.player.rect.center
+    g.camera.set_from_rect()
+    g.camera.set_parent(g.player, offset=False)
+    
+    saving.Saved_Data("test_data", save_on_quit=True)
+    #saving.Saved_Variable("x", g.player, "test_data", load_on_start=True, save_on_change=True)
+    #saving.Saved_Variable("y", g.player, "test_data", load_on_start=True, save_on_change=True)
+    
+    #saving.Saved_Variable("x", g.camera, "test_data", load_on_start=True, save_on_change=True)
+    #saving.Saved_Variable("y", g.camera, "test_data", load_on_start=True, save_on_change=True)
+    
+    #particles.Rain(5, 0.05, 8, gy=5, max_particles=2000)
+    
+    g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
 
 
 
@@ -401,8 +402,17 @@ def draw():
     for obj in drawing_objects:
         obj.draw()
 
-    #for node_map in g.node_maps:
-    #    node_map.draw()
+    for node_map in g.node_maps:
+        node_map.draw()
+        
+        path_slow = ai.get_path(node_map, g.player.rect.center, g.tmp, max_nodes=10)
+        path_quick = ai.get_path_quick(node_map, g.player.rect.center, g.tmp, max_nodes=10)
+        
+        for node in path_quick:
+            node.draw(colour=g.WHITE)
+            
+        for node in path_slow:
+            node.draw(colour=g.BLUE)
 
     for animation_system in g.animation_systems:
         animation_system.update()
@@ -412,10 +422,9 @@ def draw():
 
 
 
-RUNNING = True
+def continue_game_loop():
 
-try:
-    while RUNNING:
+    try:
         #update
         if g.time_to_next_tick <= g.time_to_next_frame:
             update_type = "tick"
@@ -429,6 +438,7 @@ try:
             elapsed_tick_time = g.tick_perf_counter-old_tick_perf_counter
             g.tick_rate = 1/elapsed_tick_time
             
+        #draw
         else:
             update_type = "frame"
             elapsed_time = g.time_to_next_frame
@@ -441,6 +451,7 @@ try:
             elapsed_frame_time = g.frame_perf_counter-old_frame_perf_counter
             g.frame_rate = 1/elapsed_frame_time
             
+        #handle
         if update_type == "tick":
             handle_internal_commands("start")
             update()
@@ -456,21 +467,25 @@ try:
             p.display.flip()
             g.frame_count += 1
     
-        #print("interval")
+        #wait to next thing
         if elapsed_time:
             if update_type == "tick":
                 g.clock.tick(1/elapsed_time)
             elif update_type == "frame":
                 g.clock.tick(1/elapsed_time)
-except:
-    import ctypes, traceback, platform
-    if platform.system() == "Windows":
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        
-        if exc_type != SystemExit:
-            MessageBox = ctypes.windll.user32.MessageBoxW 
-            MessageBox(None, "Exception thrown\nType: "+str(exc_type)+"\nValue: "+str(exc_value)+"\nTraceback:\n"+str(traceback), 'Error', 0)
-finally:
-    p.display.quit()
-    sys.exit()
+                    
+                    
+    except:
+        #if g.RUNNING is False, then the program has most likely exited normally
+        if g.RUNNING: 
+            import ctypes, traceback, platform, traceback
+            if platform.system() == "Windows":
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                
+                if exc_type != SystemExit:
+                    MessageBox = ctypes.windll.user32.MessageBoxW 
+                    MessageBox(None, "\nException thrown\nType: "+str(exc_type)+"\nValue: "+str(exc_value)+"\n\n\nFull Traceback:\n\n"+str(traceback.format_exc()), 'Error!', 0)
+                    
+            util.quit_game()
+
     

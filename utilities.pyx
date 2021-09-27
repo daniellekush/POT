@@ -370,8 +370,9 @@ def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
     Interpolated value as a number or list of interpolated number values.
     """
     
-    #check to see if all objects are collections or not collections
+    #check to see if all objects are sequences or not sequences (not as proper as isinstances but a bit faster)
     if hasattr(v1_list, "__getitem__") == hasattr(v2_list, "__getitem__") == hasattr(amount_list, "__getitem__"):
+    
         if hasattr(v1_list, "__getitem__"):
             if (len(v1_list) == len(v2_list) == len(amount_list)) == False:
                 raise IndexError("v1_list, v2_list and amount_list must have the same number of elements")

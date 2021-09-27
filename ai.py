@@ -2,11 +2,11 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import utilities as util
-import global_values as g
-import levels
-import entities
-import cameras
+from . import utilities as util
+from . import global_values as g
+from . import levels
+from . import entities
+from . import cameras
 
 import pygame as p
 import math as m
@@ -92,10 +92,10 @@ class Node():
         self.connect(cardinal=cardinal, diagonal=diagonal, all_directions=all_directions)
                         
 
-    def draw(self):
-        g.camera.draw_transformed_ellipse(g.BLUE, self.rect, 1)
+    def draw(self, colour=g.BLUE, connection_colour=g.GREEN):
+        g.camera.draw_transformed_ellipse(colour, self.rect, 1)
         for connection in self.connections:
-            g.camera.draw_transformed_line(g.GREEN, (self.x, self.y), (connection.node.x, connection.node.y))
+            g.camera.draw_transformed_line(connection_colour, (self.x, self.y), (connection.node.x, connection.node.y))
 
     def delete(self):
         self.node_map.node_list.remove(self)

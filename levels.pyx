@@ -2,9 +2,9 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import global_values as g
-import utilities as util
-import graphics as gfx
+from . import global_values as g
+from . import utilities as util
+from . import graphics as gfx
 
 import math as m
 import pygame as p
@@ -130,6 +130,10 @@ class Level():
         self.y = self.rect.y
         self.width = self.rect.width
         self.height = self.rect.height
+        
+        #set default gravity
+        self.gravity_strength = 0
+        self.gravity_direction = m.radians(90)
 
         self.__dict__.update(info_dict)
         

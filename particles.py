@@ -1,8 +1,8 @@
-import utilities as util
-import global_values as g
-import entities
-import interface_components as ic
-import events
+from . import utilities as util
+from . import global_values as g
+from . import entities
+from . import interface_components as ic
+from . import events
 
 import pygame as p
 import numpy as np

@@ -2,9 +2,9 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import utilities as util
-import global_values as g
-import entities
+from . import utilities as util
+from . import global_values as g
+from . import entities
 
 import pygame as p
 import os

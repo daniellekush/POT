@@ -2,8 +2,8 @@
 # cython: language_level=3
 # cython: infer_types=True
 
-import utilities as util
-import global_values as g
+from . import utilities as util
+from . import global_values as g
 
 import math as m
 import pygame as p
@@ -388,6 +388,9 @@ def load_image(data, transparent_override=None, bit_depth=None, absolute_width=N
         
     elif isinstance(data, p.Surface):
         surface = data
+        
+    else:
+        raise TypeError("Could not load image from data type: "+str(type(data)))
 
     if transparent_override is not None:
         transparent = transparent_override

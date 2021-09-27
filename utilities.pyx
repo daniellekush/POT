@@ -355,12 +355,12 @@ def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
     
     Parameters
     ----------
-    v1_list : number/list
-    First value or list of values.
-    v2_list : number/list
-    Second value or list of values.
-    amount_list : number/list
-    Amount or list of amount to interpolate by - between 0 and 1.
+    v1_list : number/sequence
+    First value or sequence of values.
+    v2_list : number/sequence
+    Second value or sequence of values.
+    amount_list : number/sequence
+    Amount or sequence of amounts to interpolate by - between 0 and 1.
     smooth : boolean
     If True, interpolate smoothly - default is False.
     
@@ -369,22 +369,46 @@ def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
     interpolated_value
     Interpolated value as a number or list of interpolated number values.
     """
-    if type(v1_list) != list:
-        v1_list = [v1_list]
-        v2_list = [v2_list]
-        amount_list = [amount_list]
+    
+    #check to see if all objects are collections or not collections
+    if hasattr(v1_list, "__getitem__") == hasattr(v2_list, "__getitem__") == hasattr(amount_list, "__getitem__"):
+        if hasattr(v1_list, "__getitem__"):
+            if (len(v1_list) == len(v2_list) == len(amount_list)) == False:
+                raise IndexError("v1_list, v2_list and amount_list must have the same number of elements")
+            else:
+            
+                #sequence
+                final_values = []
+                for i in range(len(v1_list)):
+                    v1 = v1_list[i]
+                    v2 = v2_list[i]
+                    amount = amount_list[i]
+            
+                    if smooth:
+                        interpolated_value = ((amount*amount*(3-(2*amount)))*(v2-v1))+v1
+                    else:
+                        difference = v2-v1
+                        interpolated_value = v1+(difference*amount)
+                        
+                    final_values.append(interpolated_value)
+                    
+                return final_values
 
-    for i in range(len(v1_list)):
-        v1 = v1_list[i]
-        v2 = v2_list[i]
-        amount = amount_list[i]
-
-        if smooth:
-            interpolated_value = ((amount*amount*(3-(2*amount)))*(v2-v1))+v1
+            
         else:
-            difference = v2-v1
-            interpolated_value = v1+(difference*amount)
-        return interpolated_value
+
+            #no sequence
+            if smooth:
+                interpolated_value = ((amount_list*amount_list*(3-(2*amount_list)))*(v2_list-v1_list))+v1_list
+            else:
+                difference = v2_list-v1_list
+                interpolated_value = v1_list+(difference*amount_list)
+                
+            return interpolated_value
+                    
+                
+    else:
+        raise AttributeError("v1_list, v2_list and amount_list must either all have the __getitem__ attribute, or must all not have the __getitem__ attribute")
 
 
 def rotate_list_left(l, n):

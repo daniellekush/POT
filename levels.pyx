@@ -130,6 +130,10 @@ class Level():
         self.y = self.rect.y
         self.width = self.rect.width
         self.height = self.rect.height
+        
+        #set default gravity
+        self.gravity_strength = 0
+        self.gravity_direction = m.radians(90)
 
         self.__dict__.update(info_dict)
         

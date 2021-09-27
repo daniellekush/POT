@@ -388,6 +388,9 @@ def load_image(data, transparent_override=None, bit_depth=None, absolute_width=N
         
     elif isinstance(data, p.Surface):
         surface = data
+        
+    else:
+        raise TypeError("Could not load image from data type: "+str(type(data)))
 
     if transparent_override is not None:
         transparent = transparent_override

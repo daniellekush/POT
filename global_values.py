@@ -78,6 +78,7 @@ DRAW_BACKGROUND = True
 TRANSPARENCY_COLOUR = (0,126,126)
 
 SHOW_FPS = True
+SHOW_NODE_MAPS = False
 
 MONITOR_WIDTH = ctypes.windll.user32.GetSystemMetrics(0)
 MONITOR_HEIGHT = ctypes.windll.user32.GetSystemMetrics(1)
@@ -100,6 +101,8 @@ level_dir = main_dir+"level"+os.path.sep
 sound_dir = main_dir+"sound"+os.path.sep
 data_dir = main_dir+"data"+os.path.sep
 internal_assets_dir = __file__+os.path.sep+"assets"+os.path.sep
+
+is_setup = False
 
 game_object_next_id = 0
 

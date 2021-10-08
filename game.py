@@ -39,6 +39,8 @@ def setup(camera_width, camera_height):
     g.camera = cameras.Camera(p.Rect(10,50, camera_width, camera_height), solid=True, collision_dict={"border":False, "levels":False})
     g.fps_text_box = interface_components.Text_Box(p.Rect(0, 0, g.fonts["arial_font_s3"].size("000.00")[0], g.fonts["arial_font_s3"].get_linesize()), g.fonts["arial_font_s3"], "", {"main"}, g.WHITE, background_colour=g.BLACK)
 
+    g.structure_classes.update({"Player_Spawn_Point":creatures.Player_Spawn_Point})
+    
     g.is_setup = True
     
 
@@ -60,8 +62,6 @@ def reset():
             saved_variable.load()
     
     events.clear_events()
-
-    
 
 #a way to "communicate" to the next tick
 #e.g. add "game over" to internal commands and then a gameover can occur next frame

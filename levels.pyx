@@ -684,7 +684,7 @@ class Tile_Level(Level):
 
                 #create new instance of tile structure
                 if tile_structure_name:
-                    tile_structure_class = globals()[tile_structure_name]
+                    tile_structure_class = g.structure_classes[tile_structure_name]
                     tile_structure_class(tile)
 
         return tiles
@@ -1006,10 +1006,6 @@ class Structure():
 
         for tag in self.tags:
             self.level.structure_tag_dict[tag].remove(self)
-
-class Player_Spawn_Point(Structure):
-    def __init__(self, tile):
-        Structure.__init__(self, tile, tile.rect.w, tile.rect.h, None, tags=set("player_spawn_point"), visible=False)
 
 def generate_maze_level(width, height, wall_char, floor_char, tunnel_amount, tunnel_width, tunnel_length, tunnel_turn_chance):
     level_lines = []

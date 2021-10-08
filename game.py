@@ -127,7 +127,7 @@ def handle_input():
         elif event.type == p.QUIT:
             util.quit_game()
 
-    g.pg_events.append(event)
+        g.pg_events.append(event)
 
     g.keys = p.key.get_pressed()
 

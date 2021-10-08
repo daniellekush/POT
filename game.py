@@ -87,7 +87,7 @@ def handle_internal_commands(tick_position):
             g.internal_commands.remove(command_data_string)
 
 def clear_mouse_locks():
-    g.mouse_locks = {i:0 for i in range(20)}
+    events.get_tagged_events("mouse_disable")
 
 def handle_input():
     g.pg_events = []

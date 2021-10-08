@@ -230,19 +230,20 @@ class Unlock_Event(Event):
         self.end()
 
 class Mouse_Disable_Event(Event):
-    def __init__(self, pipe, **_kwargs):
+    def __init__(self, pipe, max_timer, **_kwargs):
         
         kwargs = {"disabled_buttons":{1:True, 2:True, 3:True}}
         kwargs.update(**_kwargs)
         
-        Event.__init__(self, pipe, **kwargs)
+        Event.__init__(self, pipe, max_timer, **kwargs)
         self.tags.add("mouse_disable")
 
-        for k,v in self.disabled_buttons:
+        for k,v in self.disabled_buttons.items():
             if v:
                 g.mouse_locks[k] += 1
 
     def delete(self):
+        Event.delete(self)
         for k,v in self.disabled_buttons:
             if v:
                 g.mouse_locks[k] -= 1

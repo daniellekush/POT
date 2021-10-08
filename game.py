@@ -93,7 +93,7 @@ def handle_internal_commands(tick_position):
             g.internal_commands.remove(command_data_string)
 
 def handle_input():
-    
+    g.pg_events = []
     for event in p.event.get():
         #state independant event handling
         if event.type == p.KEYDOWN:
@@ -108,30 +108,7 @@ def handle_input():
                     if slide.keypress_progression["forward"] == event.key:
                         slide.progress(1)
 
-            if "rules" in g.current_states:
-                if event.key == p.K_ESCAPE:
-                    g.current_states = {"start"}
-
-            if "game_over" in g.current_states:
-                if event.key == p.K_ESCAPE:
-                    g.current_states = {"start"}
-
-            if "main" in g.current_states:
-                if event.key == p.K_e:
-                    g.internal_commands.append("game_over")
-
-                if event.key == p.K_r:
-                    events.Camera_Shake_Event(None, g.MAX_TICK_RATE*2, 30, 8)
-
-                #if event.key == p.K_SPACE:
-                    #print(g.player.grounded)
-                    #if g.player.grounded:
-                    #    g.player.vy = -30
-                    #else:
-                    #    draw()
-                    #    p.display.flip()
-                    #    import time
-                    #    time.sleep(1)
+            
                         
                     
         elif event.type == p.KEYUP:
@@ -151,6 +128,8 @@ def handle_input():
             
         elif event.type == p.QUIT:
             util.quit_game()
+
+	g.pg_events.append(event)
 
     g.keys = p.key.get_pressed()
 
@@ -384,7 +363,7 @@ def continue_game_loop():
                 
                 if exc_type != SystemExit:
                     MessageBox = ctypes.windll.user32.MessageBoxW 
-                    MessageBox(None, "\nException thrown\nType: "+str(exc_type)+"\nValue: "+str(exc_value)+"\n\n\nFull Traceback:\n\n"+str(traceback.format_exc()), 'Error!', 0)
+                    MessageBox(None, "\nException thrown\nType: "+str(exc_type)+"\nValue: "+str(exc_value)+"\n\n\nFull Traceback:\n\n"+str(traceback.format_exc()), 'Error! (Please report to dev!)', 0)
                     
             util.quit_game()
 

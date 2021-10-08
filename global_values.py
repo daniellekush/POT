@@ -166,6 +166,7 @@ saved_data_dicts = {}
 saved_variables = []
 
 internal_commands = []
+pg_events = []
 
 current_pressed_button = None
 

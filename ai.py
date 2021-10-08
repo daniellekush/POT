@@ -262,7 +262,7 @@ def get_path_quick(node_map, start_pos, goal_pos, max_nodes=10):
     else:
         goal_node = get_nearest_node(node_map, goal_pos)
 
-    if not start_node:
+    if not start_node or not goal_node:
         return []
 
     path = []

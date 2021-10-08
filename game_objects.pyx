@@ -129,10 +129,12 @@ class Game_Object():
 
     def set_parent(self, parent):
         self.parent = parent
-        self.parent.children.append(self)
+        if self not in self.parent.children:
+            self.parent.children.append(self)
 
     def remove_parent(self):
-        self.parent.children.remove(self)
+        if self in self.parent.children:
+            self.parent.children.remove(self)
         self.parent = None
 
     def remove_child(self, child):

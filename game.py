@@ -32,13 +32,7 @@ from . import utilities as util
 from operator import attrgetter    
 
 display.setup_display()
-sound.load_sound_dict()
-
-gfx.SysFont("arial_font_s1", "arial", 10)
-gfx.SysFont("arial_font_s2", "arial", 20)
-gfx.SysFont("arial_font_s3", "arial", 30)
-
-   
+sound.load_sound_dict()   
    
 def setup(camera_width, camera_height):
     
@@ -92,9 +86,13 @@ def handle_internal_commands(tick_position):
 
             g.internal_commands.remove(command_data_string)
 
+def clear_mouse_locks():
+    g.mouse_locks = {i:0 for i in range(20)}
+
 def handle_input():
     g.pg_events = []
     for event in p.event.get():
+        
         #state independant event handling
         if event.type == p.KEYDOWN:
             for keypress_event in [e for e in g.events if (isinstance(e, events.Keypress_Event) and e.press_type == "press")]:
@@ -129,7 +127,7 @@ def handle_input():
         elif event.type == p.QUIT:
             util.quit_game()
 
-	g.pg_events.append(event)
+    g.pg_events.append(event)
 
     g.keys = p.key.get_pressed()
 

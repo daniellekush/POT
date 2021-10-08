@@ -288,30 +288,34 @@ class Entity(game_objects.Game_Object):
                 if steps > g.ENTITY_STEP_SNAP_THRESHOLD and not aw and not ah:
                     if isinstance(colliding, Entity):
                         collide_rect = colliding.collide_rect
+                    elif isinstance(colliding, bool):
+                        collide_rect = None
                     else:
                         collide_rect = colliding.rect
-                    x_diff = self.collide_rect.centerx-collide_rect.centerx
-                    y_diff = self.collide_rect.centery-collide_rect.centery
-                    if abs(x_diff) > abs(y_diff):
-                        if x_diff < 0:
-                            self.collide_rect.right = collide_rect.x
-                        else:
-                            self.collide_rect.x = collide_rect.right
-                    else:
-                        if y_diff < 0:
-                            self.collide_rect.bottom = collide_rect.y
-                        else:
-                            self.collide_rect.y = collide_rect.bottom
-
-                    if not check:
-                        self.collide(colliding)
                         
-                    can_move_x = False
-                    can_move_y = False
+                    if collide_rect:
+                        x_diff = self.collide_rect.centerx-collide_rect.centerx
+                        y_diff = self.collide_rect.centery-collide_rect.centery
+                        if abs(x_diff) > abs(y_diff):
+                            if x_diff < 0:
+                                self.collide_rect.right = collide_rect.x
+                            else:
+                                self.collide_rect.x = collide_rect.right
+                        else:
+                            if y_diff < 0:
+                                self.collide_rect.bottom = collide_rect.y
+                            else:
+                                self.collide_rect.y = collide_rect.bottom
+    
+                        if not check:
+                            self.collide(colliding)
                             
-                    nx = self.collide_rect.x-cx_offset
-                    ny = self.collide_rect.y-cy_offset
-                    return finish_movement()
+                        can_move_x = False
+                        can_move_y = False
+                                
+                        nx = self.collide_rect.x-cx_offset
+                        ny = self.collide_rect.y-cy_offset
+                        return finish_movement()
             else:
                 nx += ax
                 ny += ay
@@ -536,7 +540,7 @@ class World_Interface_Component(Entity):
     def update(self):
         Entity.update(self)
         self.draw_rect = g.camera.transform_rect(self.rect)
-        print(self.rect, self.draw_rect)
+
         self.interface_component.rect = self.draw_rect
         self.interface_component.set_from_rect()
 

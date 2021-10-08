@@ -371,27 +371,46 @@ def interpolate_between_values(v1_list, v2_list, amount_list, smooth=False):
     """
     
     #check to see if all objects are sequences or not sequences (not as proper as isinstances but a bit faster)
-    if hasattr(v1_list, "__getitem__") == hasattr(v2_list, "__getitem__") == hasattr(amount_list, "__getitem__"):
+    if hasattr(v1_list, "__getitem__") == hasattr(v2_list, "__getitem__"):
     
         if hasattr(v1_list, "__getitem__"):
-            if (len(v1_list) == len(v2_list) == len(amount_list)) == False:
-                raise IndexError("v1_list, v2_list and amount_list must have the same number of elements")
+            if (len(v1_list) == len(v2_list)) == False:
+                raise IndexError("v1_list and v2_list must have the same number of elements")
             else:
             
-                #sequence
-                final_values = []
-                for i in range(len(v1_list)):
-                    v1 = v1_list[i]
-                    v2 = v2_list[i]
-                    amount = amount_list[i]
-            
-                    if smooth:
-                        interpolated_value = ((amount*amount*(3-(2*amount)))*(v2-v1))+v1
-                    else:
-                        difference = v2-v1
-                        interpolated_value = v1+(difference*amount)
+                if hasattr(amount_list, "__getitem__"):
+                    if len(amount_list) != len(v1_list):
+                        raise IndexError("amount_list must have the same number of elements as v1_list or v2_list, or be a single value")
+                    
+                    #sequence
+                    final_values = []
+                    for i in range(len(v1_list)):
+                        v1 = v1_list[i]
+                        v2 = v2_list[i]
+                        amount = amount_list[i]
+                
+                        if smooth:
+                            interpolated_value = ((amount*amount*(3-(2*amount)))*(v2-v1))+v1
+                        else:
+                            difference = v2-v1
+                            interpolated_value = v1+(difference*amount)
+                            
+                        final_values.append(interpolated_value)
                         
-                    final_values.append(interpolated_value)
+                else:
+                    #sequence with non-list amount_list
+                    final_values = []
+                    for i in range(len(v1_list)):
+                        v1 = v1_list[i]
+                        v2 = v2_list[i]
+                
+                        if smooth:
+                            interpolated_value = ((amount_list*amount_list*(3-(2*amount_list)))*(v2-v1))+v1
+                        else:
+                            difference = v2-v1
+                            interpolated_value = v1+(difference*amount_list)
+                            
+                        final_values.append(interpolated_value)
                     
                 return final_values
 

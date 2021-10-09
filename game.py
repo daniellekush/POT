@@ -65,27 +65,23 @@ def reset():
 
 #a way to "communicate" to the next tick
 #e.g. add "game over" to internal commands and then a gameover can occur next frame
-def handle_internal_commands(tick_position):
+def get_internal_commands(tick_position):
     #removing duplicates (sets cannot be used because order may need to be maintained)
     internal_commands = []
     internal_commands = [c for c in g.internal_commands if c not in internal_commands]
     
+    return_internal_commands = []
     for command_data_string in internal_commands:
         command_data = command_data_string.split("|")
         command = command_data[-1]
 
         #actually handle command
         if (command_data[0] == tick_position) or (len(command_data) == 1 and tick_position == "end"):
-            if command == "game_over":
-                game_over()
-
-            elif command == "new_game":
-                new_game()
-
-            elif command == "reset":
-                reset()
+            return_internal_commands.append(command_data) 
 
             g.internal_commands.remove(command_data_string)
+
+    return return_internal_commands
 
 def clear_mouse_locks():
     events.get_tagged_events("mouse_disable")

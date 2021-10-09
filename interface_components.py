@@ -246,18 +246,20 @@ class Cursor(Decoration):
         self.rect.center = (g.smx, g.smy)
         
     def delete(self):
-	    Decoration.delete(self)
-	    
-	    if not g.game_objects.get("class_Cursor", False):
-	        p.mouse.set_visible(True)
+        Decoration.delete(self)
+        
+        if not g.game_objects.get("class_Cursor", False):
+            p.mouse.set_visible(True)
 
 class Button(Interface_Component):
-    def __init__(self, name, rect, pressed_graphics, unpressed_graphics, active_states, **_kwargs):
+    def __init__(self, name, rect, command_data, pressed_graphics, unpressed_graphics, active_states, **_kwargs):
         kwargs = {"button_type":"hold", "can_press":True, "highlighted_graphics":None, "highlighted_colour":g.GREEN, "highlighted_thickness":4, "press_shift_x":0, "press_shift_y":0, "press_shift_w":0, "press_shift_h":0}
         kwargs.update(_kwargs)
         
         Interface_Component.__init__(self, rect, active_states, **kwargs)
         self.name = name
+        self.command_data = command_data
+        
         self.pressed_graphics = pressed_graphics
         self.unpressed_graphics = unpressed_graphics
 
@@ -301,6 +303,7 @@ class Button(Interface_Component):
     def press(self):
         g.current_pressed_button = self
         g.pressed_buttons.add(self)
+        g.internal_commands.append(self.command_data)
 
     def unpress(self):
         g.pressed_buttons.remove(self)
@@ -458,7 +461,7 @@ class Measurement(Interface_Component):
             value = round(util.get_variable_value(self.variable_name, variable_obj=self.variable_obj), self.round)
         #ensure positive or 0
         if value < 0:
-	        value = 0
+            value = 0
         
         if self.direction == "horizontal":
             rect = p.Rect(self.x, self.y, value*self.gfx_size[0], self.gfx_size[1])

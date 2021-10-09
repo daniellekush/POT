@@ -753,7 +753,7 @@ class Play_Sound_Event(Event):
             _sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
 
     def end(self):
-        from . import sound
+        from . import sound as _sound
         Event.end(self)
         if self.delay:
             _sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
@@ -776,7 +776,7 @@ class Stop_Sound(Event):
             _sound.stop_sound(self.sound)
 
     def end(self):
-        from . import sound
+        from . import sound as _sound
         Event.end(self)
         if self.delay:
             _sound.stop_sound(self.sound)

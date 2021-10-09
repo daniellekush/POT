@@ -141,6 +141,33 @@ class Node_Map():
             for connection in node.connections:
                 g.camera.draw_transformed_line(g.GREEN, (node.x, node.y), (connection.node.x, connection.node.y))
         g.screen.unlock()
+        
+    def generate_from_level(self, level, node_spacing, collision_dict, node_radius=5, node_connection_radius_override=None, cardinal=False, diagonal=False, all_directions=True):
+        if node_connection_radius_override is None:
+            if diagonal:
+                node_connection_radius = ((node_spacing**2)+(node_spacing**2))**0.5
+            else:
+                node_connection_radius = node_spacing
+        else:
+            node_connection_radius = node_connection_radius_override
+    
+        node_mask = p.Mask((node_spacing, node_spacing),fill=True)
+        
+        for x in range(int(level.rect.w/node_spacing)):
+            for y in range(int(level.rect.h/node_spacing)):
+                solid = False
+                rect = p.Rect( level.x+(x*node_spacing), level.y+(y*node_spacing), node_spacing, node_spacing)
+    
+                if isinstance(level, levels.Mask_Level):
+                    mask = node_mask 
+                else:
+                    mask = None
+                
+                solid = level.check_collision(rect, mask)
+                                  
+                if not solid:
+                    node = Node(rect.centerx, rect.centery, self, collision_dict, radius=node_radius, connection_radius=node_connection_radius)
+                    node.connect(cardinal=cardinal, diagonal=diagonal, all_directions=all_directions)
 
 def draw_path(path):
     for node in path:

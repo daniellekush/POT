@@ -495,7 +495,7 @@ class Measurement(Interface_Component):
 
 class Text_Box(Interface_Component):
     def __init__(self, rect, font, text, active_states, text_colour, **_kwargs):
-        kwargs = {"center_text":(False, False), "background_colour":None, "border_colour":None, "border_thickness":4, "antialias":False, "eval_text":False, "safe_bounding":False}
+        kwargs = {"center_text":(False, False), "background_colour":None, "border_colour":None, "border_thickness":4, "antialias":False, "eval_text":False, "safe_bounding":False, "bound_to_text":False}
         kwargs.update(_kwargs)
         
         Interface_Component.__init__(self, rect, active_states, **kwargs)
@@ -535,11 +535,32 @@ class Text_Box(Interface_Component):
             p.draw.rect(self.surface, self.border_colour, border_rect, self.border_thickness)
 
     def set_text(self, text):
-        self.create_surface()
         
         
         text_height = self.font.size(text)[1]
-
+        
+        if self.bound_to_text:
+            large_bound_rect = p.Rect(0,0,9999,9999)
+            #we only need to take newlines into consideration here when splitting up text
+            text_lines = util.bound_text(self.font, large_bound_rect, text)
+            
+            longest_line_index = 0
+            longest_line_length = self.font.size(text_lines[longest_line_index])[0]
+            
+            for i,line in enumerate(text_lines):
+                line_length = self.font.size(line)[0]
+                if line_length > longest_line_length:
+                    longest_line_index = i
+                    longest_line_length = self.font.size(text_lines[longest_line_index])[0]
+                    
+            self.rect.w = longest_line_length
+            self.rect.h = text_height*len(text_lines)
+            self.set_from_rect()
+            
+            self.create_surface()
+        else:
+            self.create_surface()
+    
         if self.border_colour:
             adjusted_rect = self.rect.inflate(-self.border_thickness*2, -self.border_thickness*2)
         else:

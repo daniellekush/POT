@@ -69,6 +69,7 @@ def handle_internal_commands(tick_position):
     #removing duplicates (sets cannot be used because order may need to be maintained)
     internal_commands = []
     internal_commands = [c for c in g.internal_commands if c not in internal_commands]
+    
     for command_data_string in internal_commands:
         command_data = command_data_string.split("|")
         command = command_data[-1]

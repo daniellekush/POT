@@ -739,7 +739,7 @@ class Overlay_Event(Event):
 
 class Play_Sound_Event(Event):
     def __init__(self, pipe, timer, sound, **_kwargs):
-        from . import sound
+        from . import sound as _sound
         
         kwargs = {"loops":0, "maxtime":0, "fade_ms":0, "delay":True, "stop_on_end":False}
         kwargs.update(_kwargs)
@@ -750,19 +750,19 @@ class Play_Sound_Event(Event):
         self.sound = sound
 
         if not self.delay:
-            sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
+            _sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
 
     def end(self):
         from . import sound
         Event.end(self)
         if self.delay:
-            sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
+            _sound.play_sound(self.sound, loops=self.loops, maxtime=self.maxtime, fade_ms=self.fade_ms)
         elif self.stop_on_end:
-            sound.stop_sound(self.sound)
+            _sound.stop_sound(self.sound)
 
 class Stop_Sound(Event):
     def __init__(self, pipe, timer, sound, **_kwargs):
-        from . import sound
+        from . import sound as _sound
         
         kwargs = {"delay":True}
         kwargs.update(_kwargs)
@@ -773,13 +773,13 @@ class Stop_Sound(Event):
         self.sound = sound
 
         if not self.delay:
-            sound.stop_sound(self.sound)
+            _sound.stop_sound(self.sound)
 
     def end(self):
         from . import sound
         Event.end(self)
         if self.delay:
-            sound.stop_sound(self.sound)
+            _sound.stop_sound(self.sound)
             
 class Keypress_Event(Event):
     def __init__(self, pipe, **_kwargs):

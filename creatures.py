@@ -1,6 +1,7 @@
 from . import global_values as g
 from . import utilities as util
 from . import entities
+from . import levels
 
 import math as m
 import random as r
@@ -164,3 +165,8 @@ class Player(Creature):
 
     def draw(self):
         Creature.draw(self)
+        
+class Player_Spawn_Point(levels.Structure):
+    def __init__(self, tile):
+        levels.Structure.__init__(self, tile, tile.rect.w, tile.rect.h, None, tags=set("player_spawn_point"), visible=False)
+

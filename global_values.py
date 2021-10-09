@@ -171,6 +171,7 @@ pg_events = []
 current_pressed_button = None
 
 active_levels = []
+structure_classes = {}
 current_level = None
 camera = None
 player = None

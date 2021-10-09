@@ -456,6 +456,9 @@ class Measurement(Interface_Component):
             value = int(util.get_variable_value(self.variable_name, variable_obj=self.variable_obj))
         if self.round >= 1:
             value = round(util.get_variable_value(self.variable_name, variable_obj=self.variable_obj), self.round)
+        #ensure positive or 0
+        if value < 0:
+	        value = 0
         
         if self.direction == "horizontal":
             rect = p.Rect(self.x, self.y, value*self.gfx_size[0], self.gfx_size[1])

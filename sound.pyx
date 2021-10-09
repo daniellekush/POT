@@ -394,13 +394,17 @@ def stop_all_sounds():
 
 def load_sound_dict(path=g.sound_dir):
     #iterate through sound files in sound_dir directory
+    
     for file in os.listdir(path):
-        if "." in file:
-            #remove file extension to get sound name
-            sound_name = file[:-4]
-            #create sound object
-            sound = p.mixer.Sound(path+file)
-            #sound = g.GLOBAL_VOLUME
-            g.sound_dict.update({sound_name:sound})
-        else:
+        if os.path.isfile(file):
+        
+            if file.endswith(".mp3") or file.endswith(".wav"):
+                #remove file extension to get sound name
+                sound_name = file[:-4]
+                #create sound object
+                sound = p.mixer.Sound(path+file)
+                #sound = g.GLOBAL_VOLUME
+                g.sound_dict.update({sound_name:sound})
+            
+        elif os.path.isdir(file):
             load_sound_dict(path+file+"\\")

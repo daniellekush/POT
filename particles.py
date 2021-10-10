@@ -15,9 +15,14 @@ class Particles():
     def __init__(self, pos, angle, spread, speed, amount, size, **_kwargs):
         
         
-        kwargs = {"colour":g.RED, "timer":g.MAX_TICK_RATE*2, "high_quality":False, "vx_keep":0.995, "vy_keep":0.995, "start_vx":0, "start_vy":0, "static":True, "min_speed":0, "max_speed":1, "style":"rect"}
+        kwargs = {"colour":g.RED, "timer":g.MAX_TICK_RATE*2, "high_quality":False,
+        "vx_keep":0.995, "vy_keep":0.995, "start_vx":0, "start_vy":0, "max_vx":10, "max_vy":10,
+        "gravity_strength":1, "static":True, "min_speed":0, "max_speed":1, "style":"rect"}
         kwargs.update(_kwargs)
-
+        
+        
+        self.pipe = events.Pipe("pipe_"+str( g.game_object_next_id ))
+        g.game_object_next_id += 1
 
         self.rect = p.Rect(pos[0], pos[1], 1, 1)
         self.x, self.y = self.rect.topleft

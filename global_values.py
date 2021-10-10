@@ -150,6 +150,7 @@ game_objects = {}
 animations = []
 animation_systems = []
 events = []
+particle_spawners = []
 pipes = {}
 pipe_list = []
 spritesheets = {}

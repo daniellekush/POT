@@ -15,7 +15,7 @@ tiles_info = {}
 
 #class for storing info about different types of tiles
 class Tile_Info():
-    def __init__(self, name, solid,  graphics_info):
+    def __init__(self, name, solid,  graphics_info, extra_graphics_info=[]):
         self.name = name
         self.solid = solid
         #graphics info is a tuple uses the format:
@@ -25,20 +25,32 @@ class Tile_Info():
         #2. a dictionary containing entries for:
         #anim_id, anim_timer (mandatory) loop, global_frame, system (optional)
         self.graphics_info = graphics_info
+        
+        #an optional collection of extra graphics in the same format as graphics_info
+        #if this isn't empty, graphics will be randomly chosen from either graphics_info or extra_graphics_info
+        #for each tile created using this Tile_Info
+        self.extra_graphics_info = extra_graphics_info
 
         tiles_info.update({self.name:self})
 
     #get or create the graphics for a tile
     def create_graphics(self, level):
-        if self.graphics_info[0]:
-            spritesheet = gfx.get_spritesheet(self.graphics_info[0])
+    
+        graphics_info_index = r.randint(0, len(self.extra_graphics_info))
+        if graphics_info_index == 0:
+            graphics_info = self.graphics_info
+        else:
+            graphics_info = self.extra_graphics_info[graphics_info_index-1]
+        
+        if graphics_info[0]:
+            spritesheet = gfx.get_spritesheet(graphics_info[0])
         else:
             spritesheet = level.tile_spritesheet
 
-        if type(self.graphics_info[1]) == tuple:
-            graphics = spritesheet.sprites[ self.graphics_info[1][0] ][ self.graphics_info[1][1] ]
+        if type(graphics_info[1]) == tuple:
+            graphics = spritesheet.sprites[ graphics_info[1][0] ][ graphics_info[1][1] ]
 
-        elif type(self.graphics_info[1]) == dict:
+        elif type(graphics_info[1]) == dict:
             anim_dict = {
                 "anim_id":0, # should be overwritten
                 "anim_timer":0, #should be overwritten
@@ -46,11 +58,11 @@ class Tile_Info():
                 "global_frame":False,
                 "system":False
                 }
-            anim_dict.update(self.graphics_info[1])
+            anim_dict.update(graphics_info[1])
             
             graphics = spritesheet.generate_animation(anim_dict["anim_id"], anim_dict["anim_timer"], anim_dict["loop"], anim_dict["global_frame"], anim_dict["system"])
 
-        return graphics
+        return graphics, graphics_info_index
 
 #get the gravity values that a rectangle will experience
 #having magnitude as True will also return the total magnitude of the gravity force
@@ -894,7 +906,11 @@ class Tile():
 
         tile_info = tiles_info[self.name]
         self.solid = tile_info.solid
-        self.graphics = tile_info.create_graphics(self.level)
+        self.graphics, graphics_index = tile_info.create_graphics(self.level)
+        
+        #we need a seperate name for caching graphics since one tile can have multiple different graphics
+        self.graphics_name = self.name+str(graphics_index)
+
 
         self.structure = None
 
@@ -907,11 +923,11 @@ class Tile():
             self.structure.draw()
 
     def quick_draw(self, rect):
-        if self.level.tile_surface_cache.get(self.name, False):
-            surface = self.level.tile_surface_cache[self.name]
+        if self.level.tile_surface_cache.get(self.graphics_name, False):
+            surface = self.level.tile_surface_cache[self.graphics_name]
         else:
             surface = gfx.scale_graphics(self.graphics, (rect.width, rect.height))
-            self.level.tile_surface_cache[self.name] = surface
+            self.level.tile_surface_cache[self.graphics_name] = surface
             
         g.screen.blit(surface, rect)
 

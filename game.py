@@ -272,8 +272,10 @@ def get_objects_to_draw(include_entities, include_interface_components):
             drawing_objects += g.active_levels
             drawing_objects += list(sorted([entity for entity in g.game_objects.get("class_Entity", []) if entity.visible], key=order_entity ))
             
+            drawing_objects += g.particle_spawners
+            
             drawing_objects += g.light_grids
-    
+            
     #foreground interface_components
     if include_interface_components:
         drawing_objects += events.get_tagged_events({"overlay"})
@@ -294,9 +296,6 @@ def draw_background():
             screen.blit(g.BACKGROUND_SURFACE)
         else:
             g.screen.fill(g.BACKGROUND_COLOUR)
-
-
-
 
 elapsed_time = 0
 def wait_for_update(last_update_type):
